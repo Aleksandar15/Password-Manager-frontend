@@ -16,6 +16,7 @@
   border-radius: 20px;
   margin-top: 20px;
   padding-top: 10px;
+  background-color: lightseagreen;
 }
 
 .AddingPassword button, input{
@@ -50,11 +51,11 @@
   height: 55px;
   background-color: lightseagreen;
   border-radius: 9px;
-  color: yellow;
+  color: palegoldenrod;
   display: flex;
   justify-content: center;
   margin: 8px;
-  font-size: 20px;
+  font-size: 17px;
   font-family: Arial, Helvetica, sans-serif;
   align-items: center;
   cursor: pointer;
