@@ -39,8 +39,10 @@ function App() {
     })
   }
   return (
-    
-    <div className="App">
+      <div className="App">
+    <div className="Title">
+      Password Manager
+    </div>
       <div className="AddingPassword">
       <p className="insert">Enter your password:</p>
 

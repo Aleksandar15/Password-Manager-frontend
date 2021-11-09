@@ -5,6 +5,16 @@
   align-items: center;
 }
 
+.Title {
+  padding: 30px;
+  font-size: 30px;
+  font-weight: bold;
+  background-color: aqua;
+  border-radius: 50px;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
 .AddingPassword {
   display: flex;
   flex-direction: column;
