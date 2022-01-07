@@ -44,26 +44,26 @@ function App() {
       Password Manager
     </div>
       <div className="AddingPassword">
-      <p className="insert">Enter your password:</p>
 
+      <p className="insert">Enter the website name:</p>
+      <input type="text" 
+      className="insert"
+      placeholder="Ex. Facebook"
+      onChange={(event) => {
+        setTitle(event.target.value);
+      }}
+      /> 
+
+      <p className="insert">Enter your password:</p>
         <input type="text" 
         className="insert"
-        placeholder="Ex. password123" 
+        placeholder="Your password here" 
         onChange={(event) => {
           setPassword(event.target.value);
         }}
         />
 
-        <p className="insert">Enter the website:</p>
-        <input type="text" 
-        className="insert"
-        placeholder="Ex. Facebook"
-        onChange={(event) => {
-          setTitle(event.target.value);
-        }}
-        /> 
         <input onClick={addPassword} type="button" className="addPw" value="Add Password" /> 
-
       </div>
       
       <div className="Passwords">
