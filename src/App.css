@@ -9,6 +9,7 @@
   padding: 30px;
   font-size: 30px;
   font-weight: bold;
+  color: rgb(102, 0, 0);
   background-color: aqua;
   border-radius: 50px;
   margin-top: 20px;
@@ -20,7 +21,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color:lightblue;
+  /* background-color:lightblue; */
   width: 70%;
   height: 300px;
   border-radius: 20px;
