@@ -19,3 +19,7 @@
 ##### Clone with HTTPS URL: `git clone https://github.com/Aleksandar15/Password-Manager-frontend.git`
 
 ##### Clone with SSH URL: `git clone git@github.com:Aleksandar15/Password-Manager-frontend.git`
+
+###### How to create the server?
+
+##### Clone the server: https://github.com/Aleksandar15/password-manager-server
