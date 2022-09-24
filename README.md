@@ -1,3 +1,9 @@
+# Version 1 using MERN Stack\*.
+
+##### \*MERN Stack technologies:
+
+###### MySQL DB + ExpressJS + ReactJS + NodeJS
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
