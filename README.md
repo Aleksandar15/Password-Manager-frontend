@@ -17,3 +17,5 @@
 ###### How to clone the project?
 
 ##### Clone with HTTPS URL: `git clone https://github.com/Aleksandar15/Password-Manager-frontend.git`
+
+##### Clone with SSH URL: `git clone git@github.com:Aleksandar15/Password-Manager-frontend.git`
