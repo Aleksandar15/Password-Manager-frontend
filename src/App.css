@@ -1,115 +1,122 @@
 .App {
-  display: flex;
-  flex-direction:column;
-  justify-content: center;
-  align-items: center;
+  text-align: center;
 }
 
-.Title {
-  padding: 30px;
-  font-size: 30px;
-  font-weight: bold;
-  color: rgb(102, 0, 0);
-  background-color: aqua;
-  border-radius: 50px;
-  margin-top: 20px;
-  margin-bottom: 30px;
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
 }
 
-.AddingPassword {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  /* background-color:lightblue; */
-  width: 70%;
-  height: 300px;
-  border-radius: 20px;
-  margin-top: 20px;
-  padding-top: 10px;
-  background-color: lightseagreen;
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
 }
 
-.AddingPassword button, input{
-  width: 300px;
-  height: 40px;
-  border: none;
-  border-radius: 7px;
-  margin: 10px;
-  padding-left: 15px;
-  font-size: 17px;
-}
-
-/* button {
-  cursor: pointer;
-} */
-
-.Passwords {
-  width: 100%;
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
-}
-.password:hover {
-  /* opacity: 1; */
-  background-color: rgb(16, 123, 123);
-}
-
-.password {
-  /* opacity: 0.9; */
-  width: 300px;
-  height: 55px;
-  background-color: lightseagreen;
-  border-radius: 9px;
-  color: palegoldenrod;
-  display: flex;
   justify-content: center;
-  margin: 8px;
-  font-size: 17px;
-  font-family: Arial, Helvetica, sans-serif;
-  align-items: center;
-  cursor: pointer;
-}
-
-.addPw {
+  font-size: calc(10px + 2vmin);
   color: white;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 20px;
-  display: flex;
-  justify-content: center;
-  font-weight: bold;
-  background-color: rgb(245, 6, 6, 0.9);
-  align-items: center;
-  width: auto;
-  height: 40px;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+.whiteFocus:focus{
+  outline: none;
+  box-shadow: none;
+  border-color: whitesmoke;
+}
+
+.whiteFocus {
+  border-color: whitesmoke;
+}
+
+th:hover, li:hover {
+  cursor: default;
+}
+
+
+th { 
+  background: rgb(50, 50, 50); 
+  color: white; 
+  font-weight: bold; 
+  border: 1px solid #ccc; 
+  width: 20%;
+}
+
+tr {
+  background: rgb(64, 190, 215);
+}
+
+table {
+  overflow: hidden;
+}
+
+td {
+  width: 20%;
+}
+
+
+.unselectable {
+  pointer-events:none;
+  user-select: none; /* standard syntax */
+  -webkit-user-select: none; /* webkit (safari, chrome) browsers */
+  -moz-user-select: none; /* mozilla browsers */
+  -khtml-user-select: none; /* webkit (konqueror) browsers */
+  -ms-user-select: none; /* IE10+ * */
+}
+
+
+@media 
+only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px)  {
+	.mobile-hide {
+    position: absolute;
+		top: -9999px;
+		left: -9999px;
+  }
+  th, td {
+    width: auto;
+  }  
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 15px;
+  /* height -> modifies the bottom(/horizontal) scrollbar */
+  height: 15px;
+}
+
+/* Trackpad */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(22, 131, 186); 
   border-radius: 10px;
-  margin: 18px;
-  cursor: pointer;
-  padding: 10px;
-  padding-top: 8px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+background: blue;
+  border-radius: 10px;
 }
 
-.addPw:hover {
-  background-color: rgb(200, 13, 13);
-}
-
-.addPw:active {
-  box-shadow: inset 3px 3px 3px red;
-  transform: translate(0px, 5px);
-  -webkit-transform: translate(0px, 5px);
-  /* transition: 1s; */
-}
-
-.insert {
-  width: 300px;
-  display: flex;
-  margin: 7px;
-  font-size: 17px;
-}
-
-h4 {
-  padding: 0%;
-  /* font-weight: 100; */
-  margin: 0% 0% 1% 0%;
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 255, 0.777); 
 }

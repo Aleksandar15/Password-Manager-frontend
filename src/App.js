@@ -1,89 +1,70 @@
-import './App.css';
-import {useState, useEffect} from "react";
-import Axios from 'axios';
+import "./App.css";
+import { Fragment, Suspense, lazy } from "react";
 
-function App() {
-  const [password, setPassword] = useState("");
-  const [title, setTitle] = useState("");
-  const [passwordList, setPasswordList] = useState([])
-  useEffect(() => {
-    Axios.get('https://alek-password-manager.herokuapp.com/showpasswords').then((response) => {
-      setPasswordList(response.data)
-  })
-  }, [])
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-  const addPassword = () => {
-    if (password === '' || title === '') {
-      alert("Password or Website cannot be empty!");
-    } else {
-    Axios.post('https://alek-password-manager.herokuapp.com/addpassword',  {
-      password: password, 
-      title: title
-    });}
-  }
+import React from "react";
+import NavBar from "./components/NavBar/NavBar";
+import PageNotFound from "./components/PageNotFound/PageNotFound";
 
-  const decryptPassword = (encryption) => {
-    Axios.post("https://alek-password-manager.herokuapp.com/decryptpassword", {
-      password: encryption.password,
-      iv: encryption.iv
-    }).then((response) => {
-      setPasswordList(
-        passwordList.map((val) => {
-        return val.id === encryption.id ? {
-          id: val.id, 
-          password: val.password, 
-          title: response.data,
-          iv: val.iv
-        } : val
-      }))
-    })
-  }
+const App = () => {
+  const FallbackManager = lazy(() => import("./components/manager/Manager"));
+  const FallbackLogin = lazy(() => import("./components/Login"));
+  const FallbackRegister = lazy(() => import("./components/Register"));
+  const FallbackHomepage = lazy(() => import("./components/HomePage"));
+
   return (
-      <div className="App">
-    <div className="Title">
-      Password Manager
-    </div>
-      <div className="AddingPassword">
+    <Fragment>
+      <Router>
+        <NavBar />
+        <div className="container">
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Suspense
+                  fallback={<h3 style={{ textAlign: "center" }}>Loading...</h3>}
+                >
+                  <FallbackHomepage />
+                </Suspense>
+              }
+            />
 
-      <p className="insert">Enter the website name:</p>
-      <input type="text" 
-      className="insert"
-      placeholder="Ex. Facebook"
-      onChange={(event) => {
-        setTitle(event.target.value);
-      }}
-      /> 
-
-      <p className="insert">Enter your password:</p>
-        <input type="text" 
-        className="insert"
-        placeholder="Your password here" 
-        onChange={(event) => {
-          setPassword(event.target.value);
-        }}
-        />
-
-        <input onClick={addPassword} type="button" className="addPw" value="Add Password" /> 
-      </div>
-      
-      <div className="Passwords">
-      <i>(click below to show saved passwords)</i>
-        {passwordList.map((val,key) => {
-          return (
-          <div className="password" onClick={() => 
-          {decryptPassword({
-            password: val.password, 
-            iv: val.iv, 
-            id: val.id
-          })}}
-          key={key}
-          > 
-            <h3>{val.title}</h3>
-           </div>
-        )})}
-      </div>
-    </div>
+            <Route
+              path="/login"
+              element={
+                <Suspense
+                  fallback={<h3 style={{ textAlign: "center" }}>Loading...</h3>}
+                >
+                  <FallbackLogin />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <Suspense
+                  fallback={<h3 style={{ textAlign: "center" }}>Loading...</h3>}
+                >
+                  <FallbackRegister />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/manager"
+              element={
+                <Suspense
+                  fallback={<h3 style={{ textAlign: "center" }}>Loading...</h3>}
+                >
+                  <FallbackManager />
+                </Suspense>
+              }
+            />
+            <Route element={<PageNotFound />} path="*" />
+          </Routes>
+        </div>
+      </Router>
+    </Fragment>
   );
-}
-
+};
 export default App;
