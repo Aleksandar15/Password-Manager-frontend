@@ -1,9 +1,10 @@
 import { Fragment, useState } from "react";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
 import useVerifyUser from "../Hooks/useVerifyUser";
-import verifyActions from "../redux/actions/verifyActions";
+// import verifyActions from "../redux/actions/verifyActions";
+import axios from "../Utils/api/axios";
 import Loading from "./Loading/Loading";
 
 // const Register = ({ setAuth }) => {
@@ -18,44 +19,40 @@ const Register = () => {
 
   const { name, email, password } = newUser;
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const registerUser = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:3003/auth/register", {
-        // const response = await fetch(
-        //   "https://password-manager.fly.dev/auth/register",
-        //   {
-        method: "POST",
-        mode: "cors",
-        headers: {
-          accept: "application/json",
-          "content-type": "application/json;charset=UTF-8",
-        },
-        body: JSON.stringify(newUser),
-      });
+      const { data } = await axios.post(
+        "/auth/register",
+        JSON.stringify(newUser),
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json;charset=UTF-8",
+          },
+        }
+      );
 
-      const data = await response.json();
+      console.log("data INSIDE Register component: ", data);
 
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-        dispatch(verifyActions());
-      } else if (
-        // if (
-        data === "User by that E-MAIL already exist in our database!"
-      ) {
-        return alert("User is already registered!");
-      } else if (data === "Invalid Email") {
-        return alert("Invalid e-mail!");
-        // } else {
-      } else if (data === "Missing Credentials") {
-        return alert("Fields can't be empty");
-        // localStorage.setItem("token", data.token);
-        // dispatch(verifyActions());
-      }
+      alert(`${data} You can login now.`);
+      return navigate("/login");
     } catch (err) {
-      alert("Password Manager error ~ Please try again");
+      const { data: JSONmessage } = err.response;
+      console.log("JSONmessage INSIDE Login: ", JSONmessage);
+
+      switch (JSONmessage) {
+        case "User by that E-MAIL already exist in our database!":
+          return alert("User is already registered!");
+        case "Invalid Email":
+          return alert("Invalid e-mail!");
+        case "Missing Credentials":
+          return alert("Fields can't be empty");
+        default:
+          return alert("Unexpected error happened, please try again");
+      }
     }
   };
 

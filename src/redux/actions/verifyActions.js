@@ -2,6 +2,18 @@ import actionTypes from "../action-types/actionTypes";
 
 import api from "../api/rootApi";
 
+// const verifyActions = (accessToken) => async (dispatch) => {
+//   try {
+//     // const data = await api.isUserAuthorized();
+
+// //NAH Thats impossible to have it in here.
+
+//     dispatch({ type: actionTypes.IS_USER_AUTHORIZED, payload: data });
+//   } catch (err) {
+//     console.log("verifyActions error: ", err.message);
+//     dispatch({ type: actionTypes.FAILED_TO_FETCH, payload: err.message });
+//   }
+// };
 const verifyActions = () => async (dispatch) => {
   try {
     const data = await api.isUserAuthorized();

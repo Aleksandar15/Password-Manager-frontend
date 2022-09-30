@@ -6,6 +6,8 @@ import ListPasswords from "./passwordList/ListPasswords";
 
 import { useDispatch } from "react-redux";
 import { showNameEmailAction } from "../../redux/actions/userInfoActions";
+import axios from "../../Utils/api/axios";
+import useAxiosPrivate from "../../Hooks/useAxiosPrivate";
 
 const Manager = () => {
   const [allPasswords, setAllPasswords] = useState([]);
@@ -17,47 +19,58 @@ const Manager = () => {
   const [isAuthenticatedOrLoading, setIsAuthenticatedOrLoading] =
     useState(false);
 
+  //
+  const axiosPrivate = useAxiosPrivate();
+  //
+
   useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+    const signal = controller.signal;
     (async () => {
       try {
-        const response = await fetch("http://localhost:3003/manager", {
-          // const response = await fetch(
-          //   "https://password-manager.fly.dev/manager",
-          //   {
-          method: "GET",
-          mode: "cors",
-          headers: {
-            token: localStorage.token,
-          },
+        const { data } = await axiosPrivate.get("/manager", {
+          signal,
+          // withCredentials: true,
         });
 
-        const data = await response.json();
+        console.log("data INSIDE Manager.js: ", data, "; signal: ", signal);
 
-        switch (data) {
+        isMounted && setAllPasswords(data);
+        setIsAuthenticatedOrLoading(true);
+        const { user_name, user_email } = data[0];
+        dispatch(showNameEmailAction({ user_name, user_email }));
+
+        return () => {
+          isMounted = false;
+          controller.abort();
+        };
+      } catch (err) {
+        const { data: JSONmessage } = err.response;
+        console.log("JSONmessage INSIDE Manager: ", JSONmessage);
+
+        switch (JSONmessage) {
           case "Error Authorizing":
+            setAllPasswords([]);
+            setIsAuthenticatedOrLoading(false);
+            alert("Problem authorizing. Please login again.");
+            navigate("/login");
+            break;
           case "Authorization error":
             setAllPasswords([]);
-            localStorage.removeItem("token");
+            // localStorage.removeItem("token");
             setIsAuthenticatedOrLoading(false);
             alert("Your session has expired. Please login again.");
             navigate("/login");
             break;
           default:
-            const { user_name, user_email } = data[0];
-
-            dispatch(showNameEmailAction({ user_name, user_email }));
-            setAllPasswords(data);
-            setIsAuthenticatedOrLoading(true);
-            break;
+            return alert("Unexpected error happened, please try again");
         }
-      } catch (err) {
-        alert("Password Manager error ~ Please try again");
-        navigate(-1);
       }
     })(); // ending of IIFE
 
     setPasswordChanges(false);
-  }, [passwordChanges, dispatch, navigate]);
+  }, [passwordChanges, dispatch, navigate, axiosPrivate]);
 
   return (
     <Fragment>
