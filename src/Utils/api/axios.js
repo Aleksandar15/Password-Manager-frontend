@@ -10,6 +10,7 @@ export const axiosPrivate = axios.create({
     Accept: "application/json",
   },
   withCredentials: true,
+  // data, //`Error: data is not defined`, so i cant fix InputPassword`s Not proper AKA same Errors as /manager->when I REMOVE Cookies refreshToken MANUALLY form DevTools && iDK i'll just leave the fix to the Authorization.js checking for missing refreshToken. && AS I remember i mixed it myself so maybe im missing something or its perfect: as of now its perfectly hanging all errors so its GREAT PERFECTIONS!
 });
 
 export const axiosCredentials = axios.create({

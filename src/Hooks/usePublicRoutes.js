@@ -1,47 +1,44 @@
 import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { axiosCredentials } from "../Utils/api/axios";
+import verifyActions from "../redux/actions/verifyActions";
 
 const usePublicRoutes = () => {
   const [isAuthenticatedOrLoading, setIsAuthenticatedOrLoading] =
     useState(false);
   const navigate = useNavigate();
 
+  const { isUserAuthorized } = useSelector((state) => state.verifyReducer);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await axiosCredentials.get("/auth/is-user-verified");
-
-        console.log(
-          "~~~IMPORTANT2 LOG2: {data} INSIDE usePublicRoutes of useEffect: ",
-          data
-        );
-        switch (data) {
+        switch (isUserAuthorized) {
           case "User is authorized":
-            setIsAuthenticatedOrLoading(false);
+            setIsAuthenticatedOrLoading(false); //unnecessary, just for safety
             navigate("/manager");
+            break;
+          case "Expired refreshToken":
+          case "Missing cookies":
+          case "Successful logout":
+          case "User not found by that refreshToken":
+            setIsAuthenticatedOrLoading(true);
+            break;
+          case "Loading":
+            dispatch(verifyActions());
+            setIsAuthenticatedOrLoading(false); //unnecessary, just for extra safety
             break;
           default:
             setIsAuthenticatedOrLoading(true);
             break;
         }
       } catch (err) {
-        console.log(
-          "error.response.data INSIDE usePublicRoutes: ",
-          err.response.data
-        );
-        switch (err.response.data) {
-          case "Expired refreshToken":
-          case "Missing cookies":
-            setIsAuthenticatedOrLoading(true);
-            break;
-          default:
-            setIsAuthenticatedOrLoading(true);
-            break;
-        }
+        console.log("error INSIDE usePublicRoutes: ", err);
       }
     })();
-  }, [navigate]);
+  }, [navigate, isUserAuthorized, dispatch]);
 
   return [isAuthenticatedOrLoading];
 };

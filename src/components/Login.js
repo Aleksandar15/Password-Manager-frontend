@@ -16,16 +16,21 @@ const Login = () => {
   const [loginUser, setLoginUser] = useState({
     email: "",
     password: "",
+    loginForever: false,
   });
 
-  const { email, password } = loginUser;
+  const { email, password, loginForever } = loginUser;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setLoginUser({ ...loginUser, [name]: value });
   };
 
-  console.log("loginUser inside Login: ", loginUser);
+  const toggleKeepMeLogged = (e) => {
+    const { name, checked } = e.target;
+
+    setLoginUser({ ...loginUser, [name]: checked });
+  };
 
   const submitLogin = async (e) => {
     e.preventDefault();
@@ -61,6 +66,7 @@ const Login = () => {
           return setLoginUser({
             email: "",
             password: "",
+            loginForever: false,
           });
         default:
           return alert("Unexpected error happened, please try again");
@@ -85,7 +91,7 @@ const Login = () => {
           <form>
             <div className="row">
               <div className="col">
-                <label htmlFor="email" className="text-light">
+                <label htmlFor="email" className="text-white">
                   Enter your e-mail:
                 </label>
                 <input
@@ -97,7 +103,7 @@ const Login = () => {
                   id="email"
                   className="form-control mb-3"
                 />
-                <label htmlFor="password" className="text-light ">
+                <label htmlFor="password" className="text-white ">
                   Enter your password:
                 </label>
                 <input
@@ -110,6 +116,21 @@ const Login = () => {
                   className="form-control mb-4"
                   required
                 />
+                {/* <div className="keepMeLogged"> */}
+                <input
+                  type="checkbox"
+                  id="keepMeLogged"
+                  onChange={toggleKeepMeLogged}
+                  name="loginForever"
+                  checked={loginForever}
+                />
+                <label
+                  htmlFor="keepMeLogged"
+                  className="text-danger ml-1 font-weight-bold"
+                >
+                  Keep me logged until I logout
+                </label>
+                {/* </div> */}
                 <button
                   className="btn btn-success btn-block mb-4"
                   onClick={(e) => submitLogin(e)}

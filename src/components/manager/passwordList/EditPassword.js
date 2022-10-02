@@ -55,7 +55,7 @@ const EditPassword = ({ password, setPasswordChanges }) => {
       setPasswordChanges(true);
     } catch (err) {
       const { data: JSONmessage } = err.response;
-      console.log("JSONmessage INSIDE Login: ", JSONmessage);
+      console.log("JSONmessage INSIDE EditPassword: ", JSONmessage);
 
       switch (JSONmessage) {
         case "Authorization error":

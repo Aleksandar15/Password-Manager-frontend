@@ -31,7 +31,6 @@ export const loginTokenAction = (accessToken) => async (dispatch) => {
   }
 };
 
-//
 export const refreshHOOKAction = (accessToken) => async (dispatch) => {
   try {
     console.log("accessToken INSIDE refreshTokenActions: ", accessToken);
