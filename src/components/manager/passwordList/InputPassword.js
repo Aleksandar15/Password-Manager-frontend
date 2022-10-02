@@ -5,6 +5,7 @@ import { searchPassword } from "../../../redux/actions/searchBarActions";
 import { logoutUserAction } from "../../../redux/actions/verifyActions";
 
 import { Button, Modal } from "react-bootstrap";
+import useAxiosPrivate from "../../../Hooks/useAxiosPrivate";
 
 const InputPassword = ({ setPasswordChanges }) => {
   const [passwordInfo, setPasswordInfo] = useState({
@@ -16,6 +17,8 @@ const InputPassword = ({ setPasswordChanges }) => {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
+
+  const axiosPrivate = useAxiosPrivate();
 
   const onSubmitForm = async (e) => {
     e.preventDefault();
@@ -29,18 +32,57 @@ const InputPassword = ({ setPasswordChanges }) => {
         setShow(true);
         return alert("Fields can't be empty");
       } else {
-        const json = await fetch("http://localhost:3003/passwords", {
-          // const json = await fetch("https://password-manager.fly.dev/passwords", {
-          method: "POST",
-          mode: "cors",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json;charset=UTF-8",
-            token: localStorage.token,
-          },
-          body: JSON.stringify(passwordInfo),
-        });
-        const data = await json.json();
+        // const json = await fetch("http://localhost:3003/passwords", {
+        //   // const json = await fetch("https://password-manager.fly.dev/passwords", {
+        //   method: "POST",
+        //   mode: "cors",
+        //   headers: {
+        //     Accept: "application/json",
+        //     "Content-Type": "application/json;charset=UTF-8",
+        //     token: localStorage.token,
+        //   },
+        //   body: JSON.stringify(passwordInfo),
+        // });
+        // const data = await json.json();
+
+        // AXIOS BELOW:
+        // AXIOS BELOW:
+        // AXIOS BELOW:
+        // AXIOS BELOW:
+        // AXIOS BELOW:
+        // // const { data } = axiosPrivate.post(
+        // const { data } = await axiosPrivate.post(
+        //   "http://localhost:3003/passwords",
+        //   //  {
+        //   //   // body: JSON.stringify(passwordInfo), //thats not how I send body in axios its just the JSON.stringify directly
+        //   //   JSON.stringify(passwordInfo) //This is errrr
+        //   // }
+        //   JSON.stringify(passwordInfo) //NEW error: `inside server addPassword err:` `TypeError the "data" argument must be of type string ...." HuH? I do stringify it! //NEW results: error was not having `await` But there is sitll more! //still doesnt work, let me include signal inside of here...but I cant DO that,as I cant use my abort bcuz thats not inside useEffect...
+        // );
+
+        // 2
+        // const controller = new AbortController();
+        // const signal = controller.signal;
+
+        // const { data } = await axiosPrivate.post(
+        //   "http://localhost:3003/passwords",
+        //   JSON.stringify(passwordInfo)
+        //   // { signal }//Doesnt fix, na pamet->MKD=>lets console.log data inside server side.
+        // );
+
+        // 3
+        const { data } = await axiosPrivate.post(
+          "http://localhost:3003/passwords",
+          // // {JSON.stringify(passwordInfo)} //Parsing error
+          // // { signal },
+          // JSON.stringify(passwordInfo)
+          // //oh wow! Server side body is now: (instead of `{}`): `{ signal: {} }`. -> why must I send the data Property by property?
+          // // WoW2: I must NOT send signal, bcuz its turned into property.
+          passwordInfo //Thats what worked?!!!!!->ITS ALL COOL and Destructured BY SERVER ENDPOINT ^ that log gave me IDEA LOL Console.log HELPS ME!
+          // { signal } //I dont need this Until I realize why i need it, + i cant turn it off in here.
+        );
+
+        console.log("data ~~~~~~~ INSIDE InputPassword: ", data);
         if (data === "Error Authorizing" || data === "Authorization error") {
           alert("Your session has expired. Please login again");
           navigate("/login");
@@ -62,6 +104,7 @@ const InputPassword = ({ setPasswordChanges }) => {
         }
       }
     } catch (err) {
+      console.log("error INSIDE INputPAssword: ", err); //this triggers on `isUserHacked -> When clicking "ADD PASSWORD" but user with same-credentials has LOGGED OUT EVERYWHEPassword Manager error -> isntead its the JSON's from Authorization.jS that I should handle JUST AS SAME AS Manager.js (bcuz its isnt handling it->INputPassword MUST handle them Authorization.js Errors) //OLD~>//RE: I get ""
       alert("Password Manager error ~ Please try again");
     }
   };

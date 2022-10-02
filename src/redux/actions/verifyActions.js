@@ -2,18 +2,6 @@ import actionTypes from "../action-types/actionTypes";
 
 import api from "../api/rootApi";
 
-// const verifyActions = (accessToken) => async (dispatch) => {
-//   try {
-//     // const data = await api.isUserAuthorized();
-
-// //NAH Thats impossible to have it in here.
-
-//     dispatch({ type: actionTypes.IS_USER_AUTHORIZED, payload: data });
-//   } catch (err) {
-//     console.log("verifyActions error: ", err.message);
-//     dispatch({ type: actionTypes.FAILED_TO_FETCH, payload: err.message });
-//   }
-// };
 const verifyActions = () => async (dispatch) => {
   try {
     const data = await api.isUserAuthorized();
@@ -27,11 +15,23 @@ const verifyActions = () => async (dispatch) => {
 
 export default verifyActions;
 
-export const logoutUserAction = () => async (dispatch) => {
+export const logoutUserAction = (logout) => async (dispatch) => {
   try {
-    dispatch({ type: actionTypes.LOGOUT_USER, payload: "LOGOUT_USER" });
+    dispatch({ type: actionTypes.LOGOUT_USER, payload: logout });
   } catch (err) {
     console.log("logoutUser error: ", err);
     dispatch({ type: actionTypes.LOGOUT_USER, payload: err.message });
+  }
+};
+
+export const logoutUserAllSessionsAction = (logout) => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.LOGOUT_USER_ALL_SESSIONS, payload: logout });
+  } catch (err) {
+    console.log("logoutUser error: ", err);
+    dispatch({
+      type: actionTypes.LOGOUT_USER_ALL_SESSIONS,
+      payload: err.message,
+    });
   }
 };

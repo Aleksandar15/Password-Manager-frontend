@@ -15,6 +15,11 @@ const verifyReducer = (state = initialState, action) => {
         ...state,
         isUserAuthorized: action.payload,
       };
+    case allActionTypes.LOGOUT_USER_ALL_SESSIONS:
+      return {
+        ...state,
+        isUserAuthorized: action.payload,
+      };
     case allActionTypes.FAILED_TO_FETCH:
       return {
         ...state,

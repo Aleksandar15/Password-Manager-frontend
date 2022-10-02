@@ -3,16 +3,11 @@ import { Fragment, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useDispatch } from "react-redux/";
-// import verifyActions from "../redux/actions/verifyActions";
 import Loading from "./Loading/Loading";
-import useVerifyUser from "../Hooks/useVerifyUser";
 import { searchPassword } from "../redux/actions/searchBarActions";
-import useRefreshToken from "../Hooks/useRefreshToken";
-// import axios, { axiosPrivate, axiosPrivateBody } from "../Utils/api/axios";
 import { axiosPrivateBody } from "../Utils/api/axios";
-// import { loginActionToken } from "../redux/actions/refreshTokenActions";
 import { loginTokenAction } from "../redux/actions/refreshTokenActions";
-// import { useEffect } from "react";
+import usePublicRoutes from "../Hooks/usePublicRoutes";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -30,6 +25,8 @@ const Login = () => {
     setLoginUser({ ...loginUser, [name]: value });
   };
 
+  console.log("loginUser inside Login: ", loginUser);
+
   const submitLogin = async (e) => {
     e.preventDefault();
     try {
@@ -46,7 +43,7 @@ const Login = () => {
       if (accessToken) {
         navigate("/manager");
         dispatch(searchPassword(""));
-        return dispatch(loginTokenAction(accessToken));
+        return dispatch(loginTokenAction(accessToken)); //NEVERMIND ITS CORRECT. this is wrong i cant be firing accessToken here~>Nevermind i Must do that as same as his `useAuth`.
       }
       switch (data) {
         case "Invalid Email":
@@ -74,10 +71,8 @@ const Login = () => {
     }
   };
 
-  const [isAuthenticatedOrLoading] = useVerifyUser();
-  console.log("isAuthenticatedOrLoading: ", isAuthenticatedOrLoading);
+  const [isAuthenticatedOrLoading] = usePublicRoutes();
 
-  const refresh = useRefreshToken();
   return (
     <Fragment>
       {!isAuthenticatedOrLoading ? (
@@ -86,8 +81,6 @@ const Login = () => {
         </Fragment>
       ) : (
         <Fragment>
-          {/* <button onClick={() => refresh()}>REFRESH TOKEN</button> */}
-          <button onClick={refresh}>REFRESH TOKEN</button>
           <h1 className="mt-4 text-center text-light mb-3">LOGIN</h1>
           <form>
             <div className="row">

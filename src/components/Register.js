@@ -1,13 +1,10 @@
 import { Fragment, useState } from "react";
-// import { useDispatch } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
-import useVerifyUser from "../Hooks/useVerifyUser";
-// import verifyActions from "../redux/actions/verifyActions";
+import usePublicRoutes from "../Hooks/usePublicRoutes";
 import axios from "../Utils/api/axios";
 import Loading from "./Loading/Loading";
 
-// const Register = ({ setAuth }) => {
 const Register = () => {
   const navigate = useNavigate();
 
@@ -18,8 +15,6 @@ const Register = () => {
   });
 
   const { name, email, password } = newUser;
-
-  // const dispatch = useDispatch();
 
   const registerUser = async (e) => {
     e.preventDefault();
@@ -61,7 +56,7 @@ const Register = () => {
     setNewUser({ ...newUser, [name]: value });
   };
 
-  const [isAuthenticatedOrLoading] = useVerifyUser();
+  const [isAuthenticatedOrLoading] = usePublicRoutes();
 
   return (
     <Fragment>

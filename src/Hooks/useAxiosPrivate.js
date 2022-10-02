@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import axios, { axiosPrivate } from "../Utils/api/axios";
+import { axiosPrivate } from "../Utils/api/axios";
 import useRefreshToken from "./useRefreshToken";
 
 const useAxiosPrivate = () => {
@@ -12,6 +12,10 @@ const useAxiosPrivate = () => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
       (config) => {
         if (!config.headers["Authorization"]) {
+          console.log(
+            "config.headers['Authorization'] REQUEST ~ INSIDE useAxiosPrivate: ",
+            config.headers["Authorization"]
+          );
           // config.headers["Authorization"] = `Bearer ${auth?.accessToken}`; //I have to get/store this from Database.
           config.headers["Authorization"] = `Bearer ${data?.accessToken}`; //I have to get/store this from Database.
         }
@@ -27,6 +31,10 @@ const useAxiosPrivate = () => {
         if (error?.response?.status === 403 && !prevRequest?.sent) {
           prevRequest.sent = true;
           const newAccessToken = await refresh();
+          console.log(
+            "~_~_~_~_~newAccessToken ~RESPONSE~ INSIDE useAxiosPrivate: ",
+            newAccessToken
+          );
           prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
           return axiosPrivate(prevRequest);
         }
@@ -38,8 +46,8 @@ const useAxiosPrivate = () => {
       axiosPrivate.interceptors.request.eject(requestIntercept);
       axiosPrivate.interceptors.response.eject(responseIntercept);
     };
-    // }, [refresh]); //why do i dont get warnings of missing `data` dependency?
-  }, [data, refresh]);
+  }, [data?.accessToken, refresh]);
+
   return axiosPrivate;
 };
 
