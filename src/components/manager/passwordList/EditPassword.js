@@ -2,13 +2,12 @@ import { Fragment, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { searchPassword } from "../../../redux/actions/searchBarActions";
-import { logoutUserAction } from "../../../redux/actions/verifyActions";
 
 import { Button, Modal } from "react-bootstrap";
 
 import copyText from "../../../Utils/copyText";
 import { useEffect } from "react";
-import axios, { axiosPrivate } from "../../../Utils/api/axios";
+import { axiosPrivate } from "../../../Utils/api/axios";
 
 const EditPassword = ({ password, setPasswordChanges }) => {
   const [passwordInfo, setPasswordInfo] = useState({
@@ -17,7 +16,6 @@ const EditPassword = ({ password, setPasswordChanges }) => {
     password: "",
   });
 
-  console.log("password INSIDE EditPassword.js: ", password);
   useEffect(() => {
     // For multi-device smoothness of getting recent changes
     setPasswordInfo((prevState) => ({
@@ -41,6 +39,11 @@ const EditPassword = ({ password, setPasswordChanges }) => {
         decryptedPassword
       );
 
+      if (decryptedPassword === "This DATA doesn't belong to you") {
+        alert("This password has been removed");
+        setShow(false);
+        return setPasswordChanges(true);
+      }
       setPasswordInfo((prevState) => ({
         ...prevState,
         password: decryptedPassword,
@@ -58,17 +61,34 @@ const EditPassword = ({ password, setPasswordChanges }) => {
       console.log("JSONmessage INSIDE EditPassword: ", JSONmessage);
 
       switch (JSONmessage) {
-        case "Authorization error":
-        case "Error Authorizing":
-        case "This DATA doesn't belong to you":
+        case "Session expired":
           alert("Your session has expired. Please login again.");
-          navigate("/login");
-          dispatch(logoutUserAction());
           dispatch(searchPassword(""));
+          navigate("/login");
+          break;
+        case "Error Authorizing":
+          alert("You are not authorized to view this page. Please login.");
+          dispatch(searchPassword(""));
+          navigate("/login");
+          break;
+        case "User has removed cookies":
+          alert(
+            "Have you removed your cookies?\nAuthorization failed, please login again."
+          );
+          dispatch(searchPassword(""));
+          navigate("/login");
+          break;
+        case "Is user hacked?":
+          alert(
+            `It looks like you or someone that has access to this account on other devices has clicked "Logout all devices" button. You can login again. \n\nOtherwise a hacker may have used your active session maliciously.\n\nIf you are sure that wasn't you, please re-login and reset your password!`
+          );
+          dispatch(searchPassword(""));
+          navigate("/login");
           break;
         case "ERROR Decrypting Password":
           alert("Server error ~ Please try again");
           break;
+        case "Authorization error":
         default:
           return alert("Unexpected error happened, please try again");
       }
@@ -92,19 +112,16 @@ const EditPassword = ({ password, setPasswordChanges }) => {
       } else {
         console.log("passwordInfo: ", passwordInfo);
 
-        const { data } = await axios.put(
+        const { data } = await axiosPrivate.put(
           `/passwords/${password.password_id}`,
-          JSON.stringify(passwordInfo),
-          {
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json;charset=UTF-8",
-            },
-            withCredentials: true,
-          }
+          passwordInfo
         );
 
         console.log("data updatePasswordInfo INSIDE EditPassword.js: ", data);
+        if (data === "This DATA doesn't belong to you") {
+          alert("This password has been removed");
+          return setPasswordChanges(true);
+        }
         setPasswordChanges(true);
         setShow(false);
       }
@@ -117,17 +134,31 @@ const EditPassword = ({ password, setPasswordChanges }) => {
       console.log("JSONmessage INSIDE Login: ", JSONmessage);
 
       switch (JSONmessage) {
-        case "Authorization error":
         case "Error Authorizing":
-        case "This DATA doesn't belong to you":
+        case "Session expired":
           alert("Your session has expired. Please login again.");
-          navigate("/login");
-          dispatch(logoutUserAction());
           dispatch(searchPassword(""));
+          navigate("/login");
+          break;
+        case "User has removed cookies":
+          alert(
+            "Have you removed your cookies?\nAuthorization failed, please login again."
+          );
+          dispatch(searchPassword(""));
+          navigate("/login");
+          break;
+        case "Is user hacked?":
+          alert(
+            `It looks like you or someone that has access to this account on other devices has clicked "Logout all devices" button. You can login again. \n\nOtherwise a hacker may have used your active session maliciously.\n\nIf you are sure that wasn't you, please re-login and reset your password!`
+          );
+          dispatch(searchPassword(""));
+          navigate("/login");
           break;
         case "ERROR Decrypting Password":
           alert("Server error ~ Please try again");
           break;
+        case "Authorization error":
+        case "UPDATE password vault: SERVER SIDE ERROR":
         default:
           return alert("Unexpected error happened, please try again");
       }
@@ -146,8 +177,7 @@ const EditPassword = ({ password, setPasswordChanges }) => {
       btnColor:
         showHide.btnColor ===
         "btn btn-outline-danger text-danger bg-dark btn-sm"
-          ? // ? "btn btn-outline-primary text-primary bg-dark btn-sm"
-            "btn btn-outline-primary text-primary bg-dark btn-sm px-3"
+          ? "btn btn-outline-primary text-primary bg-dark btn-sm px-3"
           : "btn btn-outline-danger text-danger bg-dark btn-sm",
     });
   };

@@ -116,7 +116,6 @@ const Login = () => {
                   className="form-control mb-4"
                   required
                 />
-                {/* <div className="keepMeLogged"> */}
                 <input
                   type="checkbox"
                   id="keepMeLogged"
@@ -130,7 +129,6 @@ const Login = () => {
                 >
                   Keep me logged until I logout
                 </label>
-                {/* </div> */}
                 <button
                   className="btn btn-success btn-block mb-4"
                   onClick={(e) => submitLogin(e)}

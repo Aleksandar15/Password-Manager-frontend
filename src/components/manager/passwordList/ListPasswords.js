@@ -1,8 +1,8 @@
 import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import useAxiosPrivate from "../../../Hooks/useAxiosPrivate";
 import { searchPassword } from "../../../redux/actions/searchBarActions";
-import { logoutUserAction } from "../../../redux/actions/verifyActions";
 
 import EditPassword from "./EditPassword";
 
@@ -10,42 +10,69 @@ const ListPasswords = ({ allPasswords, setPasswordChanges }) => {
   const [passwords, setPasswords] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const axiosPrivate = useAxiosPrivate();
   useEffect(() => {
     setPasswords(allPasswords);
   }, [allPasswords]);
   const deletePassword = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3003/passwords/${id}`, {
-        // const response = await fetch(
-        //   `https://password-manager.fly.dev/passwords/${id}`,
-        //   {
-        method: "DELETE",
-        headers: {
-          token: localStorage.token,
-        },
-      });
-      const data = await response.json();
-      if (
-        data === "Error Authorizing" ||
-        data === "Authorization error" ||
-        data === "This DATA doesn't belong to you"
-      ) {
-        alert("Your session has expired. Please login again");
-        navigate("/login");
-        dispatch(logoutUserAction());
-        dispatch(searchPassword(""));
-      } else if (data === "deletePassword SERVER SIDE ERROR") {
-        alert("Server error ~ Please try again");
-        navigate("/login");
-        dispatch(logoutUserAction());
-        dispatch(searchPassword(""));
-      } else if (data === "Password was deleted!") {
-        setPasswords(
-          passwords.filter((password) => password.password_id !== id)
-        );
+      const { data } = await axiosPrivate.delete(`/passwords/${id}`);
+      console.log("~~~~~~~DATA inside ListPasswords AKA DELETE: ", data);
+      switch (data) {
+        case "Password was deleted!":
+          setPasswords(
+            passwords.filter((password) => password.password_id !== id)
+          );
+          break;
+        case "This DATA doesn't belong to you":
+          alert("This password has already been removed");
+          setPasswords(
+            passwords.filter((password) => password.password_id !== id)
+          );
+          break;
+        default:
+          alert("Unexpected error happened, please try again");
+          setPasswordChanges(true);
+          break;
       }
     } catch (err) {
-      console.error("Error deleting TODO: ", err.message);
+      console.error("Error deleting PASSWORD: ", err.response.data);
+      const { data: JSONmessage } = err.response;
+      console.log("~+~+~+~+~+~+~JSONmessage ListPasswords: ", JSONmessage);
+      switch (JSONmessage) {
+        case "Session expired":
+          alert("Your session has expired. Please login again.");
+          dispatch(searchPassword(""));
+          navigate("/login");
+          break;
+        case "Error Authorizing":
+          alert("You are not authorized to view this page. Please login.");
+          dispatch(searchPassword(""));
+          navigate("/login");
+          break;
+        case "Is user hacked?":
+          alert(
+            `It looks like you or someone that has access to this account on other devices has clicked "Logout all devices" button. You can login again. \n\nOtherwise a hacker may have used your active session maliciously.\n\nIf you are sure that wasn't you, please re-login and reset your password!`
+          );
+          dispatch(searchPassword(""));
+          navigate("/login");
+          break;
+        case "User has removed cookies":
+          alert(
+            "Have you removed your cookies?\nAuthorization failed, please login again."
+          );
+          dispatch(searchPassword(""));
+          navigate("/login");
+          break;
+        default:
+        case "Authorization error":
+        case "deletePassword SERVER SIDE ERROR":
+          alert("Unexpected error happened, please try again");
+          setPasswordChanges(true);
+          dispatch(searchPassword(""));
+          navigate("/login");
+          break;
+      }
     }
   };
 
@@ -71,7 +98,6 @@ const ListPasswords = ({ allPasswords, setPasswordChanges }) => {
           <thead>
             <tr className="text-secondary thListPasswords">
               <th>Website</th>
-              {/* <th>E-mail / Username</th> */}
               <th className="mobile-hide">E-mail / Username</th>
               <th className="mobile-hide">Password</th>
               <th>View/Edit</th>
