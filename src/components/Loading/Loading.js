@@ -1,18 +1,17 @@
 function Loading() {
   return (
-    <h2
+    <h1
       style={{
         textAlign: "center",
-        background: "cyan",
         color: "blue",
         borderRadius: "22px",
-        padding: "5px",
-        paddingBottom: "10px",
-        marginTop: "10px",
+        marginTop: "20px",
+        fontFamily: "Fantasy, Arial, Helvetica, sans-serif",
+        fontSize: "44px",
       }}
     >
-      Loading...
-    </h2>
+      LOADING . . .
+    </h1>
   );
 }
 
