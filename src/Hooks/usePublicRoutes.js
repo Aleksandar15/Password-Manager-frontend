@@ -17,21 +17,24 @@ const usePublicRoutes = () => {
       try {
         switch (isUserAuthorized) {
           case "User is authorized":
-            setIsAuthenticatedOrLoading(false); //unnecessary, just for safety
+            setIsAuthenticatedOrLoading(false);
             navigate("/manager");
             break;
           case "Expired refreshToken":
           case "Missing cookies":
+          case "User has removed cookies":
           case "Successful logout":
-          case "User not found by that refreshToken":
+          case "User not found by that refreshToken - logout":
+          case "Missing cookies - logout":
             setIsAuthenticatedOrLoading(true);
             break;
           case "Loading":
+            setIsAuthenticatedOrLoading(false);
             dispatch(verifyActions());
-            setIsAuthenticatedOrLoading(false); //unnecessary, just for extra safety
             break;
           default:
             setIsAuthenticatedOrLoading(true);
+            alert("Unexpected error happened, please refresh.");
             break;
         }
       } catch (err) {

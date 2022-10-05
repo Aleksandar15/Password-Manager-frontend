@@ -8,6 +8,7 @@ import { searchPassword } from "../redux/actions/searchBarActions";
 import { axiosPrivateBody } from "../Utils/api/axios";
 import { loginTokenAction } from "../redux/actions/refreshTokenActions";
 import usePublicRoutes from "../Hooks/usePublicRoutes";
+import verifyActions from "../redux/actions/verifyActions";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -48,7 +49,8 @@ const Login = () => {
       if (accessToken) {
         navigate("/manager");
         dispatch(searchPassword(""));
-        return dispatch(loginTokenAction(accessToken)); //NEVERMIND ITS CORRECT. this is wrong i cant be firing accessToken here~>Nevermind i Must do that as same as his `useAuth`.
+        dispatch(loginTokenAction(accessToken));
+        return dispatch(verifyActions());
       }
       switch (data) {
         case "Invalid Email":

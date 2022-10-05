@@ -11,7 +11,7 @@ const useLogoutUserAllSessions = () => {
       const { data } = await axios.delete("/auth/logoutallsessions", {
         withCredentials: true,
       });
-      console.log("data INSIDE useLogout: ", data);
+      console.log("data INSIDE useLogoutUserAllSessions: ", data);
     } catch (err) {
       console.error("Logout error: ", err);
     }

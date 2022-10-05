@@ -24,7 +24,7 @@ const Manager = () => {
     let isMounted = true;
     (async () => {
       try {
-        const { data } = await axiosPrivate.get("/manager", {});
+        const { data } = await axiosPrivate.get("/manager");
 
         isMounted && setAllPasswords(data);
         setIsAuthenticatedOrLoading(true);

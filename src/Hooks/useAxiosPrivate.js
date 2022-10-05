@@ -16,8 +16,7 @@ const useAxiosPrivate = () => {
             "config.headers['Authorization'] REQUEST ~ INSIDE useAxiosPrivate: ",
             config.headers["Authorization"]
           );
-          // config.headers["Authorization"] = `Bearer ${auth?.accessToken}`; //I have to get/store this from Database.
-          config.headers["Authorization"] = `Bearer ${data?.accessToken}`; //I have to get/store this from Database.
+          config.headers["Authorization"] = `Bearer ${data?.accessToken}`;
         }
         return config;
       },
@@ -31,10 +30,6 @@ const useAxiosPrivate = () => {
         if (error?.response?.status === 403 && !prevRequest?.sent) {
           prevRequest.sent = true;
           const newAccessToken = await refresh();
-          console.log(
-            "~_~_~_~_~newAccessToken ~RESPONSE~ INSIDE useAxiosPrivate: ",
-            newAccessToken
-          );
           prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
           return axiosPrivate(prevRequest);
         }

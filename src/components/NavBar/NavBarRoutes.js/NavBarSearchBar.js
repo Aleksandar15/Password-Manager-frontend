@@ -1,17 +1,13 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { searchPassword } from "../../../redux/actions/searchBarActions";
-import {
-  logoutUserAction,
-  logoutUserAllSessionsAction,
-} from "../../../redux/actions/verifyActions";
 import PasswordGenerator from "../../PasswordGenerator/PasswordGenerator";
+
+import useLogouts from "../../../Hooks/logout/useLogouts";
 
 function NavBarSearchBar() {
   const location = useLocation();
-
-  const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
@@ -33,17 +29,7 @@ function NavBarSearchBar() {
 
   const { user_name: name, user_email: email } = userInfo;
 
-  const logout = () => {
-    dispatch(logoutUserAction());
-    navigate("/");
-    return dispatch(searchPassword(""));
-  };
-
-  const logoutAllSessions = () => {
-    dispatch(logoutUserAllSessionsAction());
-    navigate("/");
-    return dispatch(searchPassword(""));
-  };
+  const { logout, logoutAllSessions } = useLogouts();
 
   const handleSubmit = (e) => {
     e.preventDefault();

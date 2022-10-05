@@ -3,7 +3,7 @@ import allActionTypes from "../../action-types/actionTypes";
 const initialState = {
   accessToken: "",
   statusCode: "",
-  errorAcccessToken: "",
+  // errorAccessToken: "",
 };
 
 export const refreshTokenReducer = (state = initialState, action) => {
@@ -25,7 +25,7 @@ export const refreshTokenReducer = (state = initialState, action) => {
       );
       return {
         ...state,
-        errorAcccessToken: action.payload.data,
+        // errorAccessToken: action.payload.data,
         statusCode: action.payload.status,
       };
     case allActionTypes.LOGIN_ACCESS_TOKEN:
@@ -46,15 +46,28 @@ export const refreshTokenReducer = (state = initialState, action) => {
         ...state,
         accessToken: action.payload,
       };
-    case allActionTypes.LOGOUT_USER:
-      console.log(
-        "action inside refreshTokenReducer ~ HOOK_ACCESS_TOKEN Type: ",
-        action
-      );
-      return {
-        ...state,
-        accessToken: action.payload,
-      };
+    // case allActionTypes.LOGOUT_USER:
+    //   console.log(
+    //     "action inside refreshTokenReducer ~ LOGOUT_USER Type: ",
+    //     action
+    //   );
+    //   return {
+    //     ...state,
+    //     // accessToken: action.payload,
+    //     // errorAccessToken: action.payload,
+    //     accessToken: action.payload,
+    //   };
+    // case allActionTypes.LOGOUT_USER_ALL_SESSIONS:
+    //   console.log(
+    //     "action inside refreshTokenReducer ~ LOGOUT_USER_ALL_SESSIONS Type: ",
+    //     action
+    //   );
+    //   return {
+    //     ...state,
+    //     // accessToken: action.payload,
+    //     // errorAccessToken: action.payload,
+    //     accessToken: action.payload,
+    //   };
     default:
       return state;
   }
