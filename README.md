@@ -2,7 +2,7 @@
 
 ##### My PERN Stack technologies:
 
-###### PostgreSQL DB + ExpressJS + ReactJS + NodeJS
+###### Postgres DB + ExpressJS + ReactJS + NodeJS
 
 ## Run my project
 
