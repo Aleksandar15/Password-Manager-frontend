@@ -6,6 +6,7 @@ import ListPasswords from "./passwordList/ListPasswords";
 
 import { useDispatch } from "react-redux";
 import { showNameEmailAction } from "../../redux/actions/userInfoActions";
+import useAxiosPrivate from "../../Hooks/useAxiosPrivate";
 
 const Manager = () => {
   const [allPasswords, setAllPasswords] = useState([]);
@@ -17,47 +18,63 @@ const Manager = () => {
   const [isAuthenticatedOrLoading, setIsAuthenticatedOrLoading] =
     useState(false);
 
+  const axiosPrivate = useAxiosPrivate();
+
   useEffect(() => {
+    let isMounted = true;
     (async () => {
       try {
-        const response = await fetch("http://localhost:3003/manager", {
-          // const response = await fetch(
-          //   "https://password-manager.fly.dev/manager",
-          //   {
-          method: "GET",
-          mode: "cors",
-          headers: {
-            token: localStorage.token,
-          },
-        });
+        const { data } = await axiosPrivate.get("/manager");
 
-        const data = await response.json();
+        isMounted && setAllPasswords(data);
+        setIsAuthenticatedOrLoading(true);
+        const { user_name, user_email } = data[0];
+        dispatch(showNameEmailAction({ user_name, user_email }));
+      } catch (err) {
+        console.log("err INSIDE Manager: ", err);
+        const { data: JSONmessage } = err?.response;
+        console.log("JSONmessage INSIDE Manager: ", JSONmessage);
 
-        switch (data) {
+        switch (JSONmessage) {
           case "Error Authorizing":
-          case "Authorization error":
+          case "User has removed cookies":
             setAllPasswords([]);
-            localStorage.removeItem("token");
+            setIsAuthenticatedOrLoading(false);
+            alert("You are not authorized to view this page. Please login.");
+            navigate("/login");
+            break;
+          case "Session expired":
+            setAllPasswords([]);
             setIsAuthenticatedOrLoading(false);
             alert("Your session has expired. Please login again.");
             navigate("/login");
             break;
+          case "Is user hacked?":
+            setIsAuthenticatedOrLoading(false);
+            alert(
+              `It looks like you or someone that has access to this account on other devices has clicked "Logout all devices" button. You can login again. \n\nOtherwise a hacker may have used your active session maliciously.\n\nIf you are sure that wasn't you, please re-login and reset your password!`
+            );
+            navigate("/login");
+            setAllPasswords([]);
+            break;
+          case "Authorization error":
+          case "passwordManager SERVER SIDE ERROR":
           default:
-            const { user_name, user_email } = data[0];
-
-            dispatch(showNameEmailAction({ user_name, user_email }));
-            setAllPasswords(data);
-            setIsAuthenticatedOrLoading(true);
+            setIsAuthenticatedOrLoading(false);
+            setAllPasswords([]);
+            alert("Unexpected error happened, please try again");
+            navigate("/login");
             break;
         }
-      } catch (err) {
-        alert("Password Manager error ~ Please try again");
-        navigate(-1);
       }
     })(); // ending of IIFE
 
     setPasswordChanges(false);
-  }, [passwordChanges, dispatch, navigate]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [passwordChanges, dispatch, navigate, axiosPrivate]);
 
   return (
     <Fragment>

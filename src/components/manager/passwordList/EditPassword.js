@@ -2,12 +2,12 @@ import { Fragment, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { searchPassword } from "../../../redux/actions/searchBarActions";
-import { logoutUserAction } from "../../../redux/actions/verifyActions";
 
 import { Button, Modal } from "react-bootstrap";
 
 import copyText from "../../../Utils/copyText";
 import { useEffect } from "react";
+import { axiosPrivate } from "../../../Utils/api/axios";
 
 const EditPassword = ({ password, setPasswordChanges }) => {
   const [passwordInfo, setPasswordInfo] = useState({
@@ -16,9 +16,8 @@ const EditPassword = ({ password, setPasswordChanges }) => {
     password: "",
   });
 
-  console.log("password INSIDE EditPassword.js: ", password);
   useEffect(() => {
-    //For when same-user logged from another device updates passwordInfo VAULT -> I want changes to be seen inside Modal:
+    // For multi-device smoothness of getting recent changes
     setPasswordInfo((prevState) => ({
       ...prevState,
       website: password.site_name,
@@ -31,110 +30,138 @@ const EditPassword = ({ password, setPasswordChanges }) => {
 
   const decryptPassword = async (id) => {
     try {
-      const response = await fetch(
-        `http://localhost:3003/manager/decryptpassword/${id}`,
-        // `https://password-manager.fly.dev/manager/decryptpassword/${id}`,
-        {
-          method: "POST",
-          mode: "cors",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json;charset=UTF-8",
-            token: localStorage.token,
-          },
-        }
+      const { data: decryptedPassword } = await axiosPrivate.post(
+        `/manager/decryptpassword/${id}`
       );
-      const decryptedPassword = await response.json();
-
-      console.log("response: ", response);
 
       console.log(
         "decryptPassword INSIDE EditPassword.js: ",
         decryptedPassword
       );
 
-      if (
-        decryptedPassword === "Authorization error" ||
-        decryptedPassword === "Error Authorizing" ||
-        decryptedPassword === "This DATA doesn't belong to you"
-      ) {
-        alert("Your session has expired. Please login again.");
-        navigate("/login");
-        dispatch(logoutUserAction());
-        dispatch(searchPassword(""));
-      } else if (decryptedPassword === "ERROR Decrypting Password") {
-        alert("Server error ~ Please try again");
-      } else {
-        setPasswordInfo((prevState) => ({
-          ...prevState,
-          password: decryptedPassword,
-        }));
-        setTextToCopy(decryptedPassword);
-        setShow(true);
-        setShowHide({
-          type: "password",
-          button: "SHOW",
-          btnColor: "btn btn-outline-danger text-danger bg-dark btn-sm",
-        });
-        setPasswordChanges(true);
-        // //I notice a pattern: its re-rendering for as many properties as 'password' have bcuz 'password' iS INFO oF: password_id + email + name + password + iv + useremail + username ~> They ALL Should have been different API calls: but that would be costly TOO,as oF NOW I think i will leave it as that BUGS: I have total fo 7 Properties to my object SO IT Console.log 7 times FOR EACH Password VUALT iF 7 = 7*7=49 almost 50 rerejders iF 100 then 700 re-renders oR 1000s thats BAD PATTERN BAD PRACTICES JUST to make it WORK at a COST oF Performance iSSUES! i must find a Workaround!
-        // ^^^ ACTUALLY Testing in Slow 3G NETWORK SLOW NETWORK iN DevTools: and its just as fast/just as SLOW SO I dont care! === its just DATA Re-rendering on top of it all so nothing is Causing Slowdown -> I mean the console.log scares me a bit but its just like a onChange oR onPasswordChanges Fires a Function=FIring doesnt mean match IM GOOD oR IM GREAT / IM PERFECTtly Fine When ther is no unnecessary API calls oR Dispatch Actions===there iS no Performance ISSUES!!!!!
+      if (decryptedPassword === "This DATA doesn't belong to you") {
+        alert("This password has been removed");
+        setShow(false);
+        return setPasswordChanges(true);
       }
+      setPasswordInfo((prevState) => ({
+        ...prevState,
+        password: decryptedPassword,
+      }));
+      setTextToCopy(decryptedPassword);
+      setShow(true);
+      setShowHide({
+        type: "password",
+        button: "SHOW",
+        btnColor: "btn btn-outline-danger text-danger bg-dark btn-sm",
+      });
+      setPasswordChanges(true);
     } catch (err) {
-      alert("Password Manager error ~ Please try again");
+      const { data: JSONmessage } = err.response;
+      console.log("JSONmessage INSIDE EditPassword: ", JSONmessage);
+
+      switch (JSONmessage) {
+        case "Session expired":
+          alert("Your session has expired. Please login again.");
+          dispatch(searchPassword(""));
+          navigate("/login");
+          break;
+        case "Error Authorizing":
+          alert("You are not authorized to view this page. Please login.");
+          dispatch(searchPassword(""));
+          navigate("/login");
+          break;
+        case "User has removed cookies":
+          alert(
+            "Have you removed your cookies?\nAuthorization failed, please login again."
+          );
+          dispatch(searchPassword(""));
+          navigate("/login");
+          break;
+        case "Is user hacked?":
+          alert(
+            `It looks like you or someone that has access to this account on other devices has clicked "Logout all devices" button. You can login again. \n\nOtherwise a hacker may have used your active session maliciously.\n\nIf you are sure that wasn't you, please re-login and reset your password!`
+          );
+          dispatch(searchPassword(""));
+          navigate("/login");
+          break;
+        case "ERROR Decrypting Password":
+          alert("Server error ~ Please try again");
+          break;
+        case "Authorization error":
+        default:
+          return alert("Unexpected error happened, please try again");
+      }
     }
   };
 
   const updatePasswordInfo = async (e) => {
     e.preventDefault();
-    setShowHide({
-      type: "password",
-      button: "SHOW",
-      btnColor: "btn btn-outline-danger text-danger bg-dark btn-sm",
-    });
     try {
+      setShowHide({
+        type: "password",
+        button: "SHOW",
+        btnColor: "btn btn-outline-danger text-danger bg-dark btn-sm",
+      });
       if (
         passwordInfo.website === "" ||
-        (passwordInfo.email === "") | (passwordInfo.password === "")
+        passwordInfo.email === "" ||
+        passwordInfo.password === ""
       ) {
         alert("Fields can't be empty");
       } else {
-        const response = await fetch(
-          `http://localhost:3003/passwords/${password.password_id}`,
-          // `https://password-manager.fly.dev/passwords/${password.password_id}`,
-          {
-            method: "PUT",
-            mode: "cors",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json;charset=UTF-8",
-              token: localStorage.token,
-            },
-            body: JSON.stringify(passwordInfo),
-          }
+        console.log("passwordInfo: ", passwordInfo);
+
+        const { data } = await axiosPrivate.put(
+          `/passwords/${password.password_id}`,
+          passwordInfo
         );
-        const data = await response.json();
-        if (
-          data === "Error Authorizing" ||
-          data === "Authorization error" ||
-          data === "This DATA doesn't belong to you"
-        ) {
-          alert("Your session has expired. Please login again.");
-          navigate("/login");
-          dispatch(logoutUserAction());
-          dispatch(searchPassword(""));
-        } else if (data === "UPDATE password vault: SERVER SIDE ERROR") {
-          alert("Server error ~ Please try again");
-          navigate("/login");
-          dispatch(logoutUserAction());
-          dispatch(searchPassword(""));
-        } else {
-          setPasswordChanges(true);
-          setShow(false);
+
+        console.log("data updatePasswordInfo INSIDE EditPassword.js: ", data);
+        if (data === "This DATA doesn't belong to you") {
+          alert("This password has been removed");
+          return setPasswordChanges(true);
         }
+        setPasswordChanges(true);
+        setShow(false);
       }
     } catch (err) {
-      console.error("ERRoR in updatePasswordInfo: ", err);
+      console.log(
+        "Error updatePasswordInfo inside EditPassword component: ",
+        err
+      );
+      const { data: JSONmessage } = err.response;
+      console.log("JSONmessage INSIDE Login: ", JSONmessage);
+
+      switch (JSONmessage) {
+        case "Error Authorizing":
+        case "Session expired":
+          alert("Your session has expired. Please login again.");
+          dispatch(searchPassword(""));
+          navigate("/login");
+          break;
+        case "User has removed cookies":
+          alert(
+            "Have you removed your cookies?\nAuthorization failed, please login again."
+          );
+          dispatch(searchPassword(""));
+          navigate("/login");
+          break;
+        case "Is user hacked?":
+          alert(
+            `It looks like you or someone that has access to this account on other devices has clicked "Logout all devices" button. You can login again. \n\nOtherwise a hacker may have used your active session maliciously.\n\nIf you are sure that wasn't you, please re-login and reset your password!`
+          );
+          dispatch(searchPassword(""));
+          navigate("/login");
+          break;
+        case "ERROR Decrypting Password":
+          alert("Server error ~ Please try again");
+          break;
+        case "Authorization error":
+        case "UPDATE password vault: SERVER SIDE ERROR":
+        default:
+          return alert("Unexpected error happened, please try again");
+      }
     }
   };
 
@@ -150,8 +177,7 @@ const EditPassword = ({ password, setPasswordChanges }) => {
       btnColor:
         showHide.btnColor ===
         "btn btn-outline-danger text-danger bg-dark btn-sm"
-          ? // ? "btn btn-outline-primary text-primary bg-dark btn-sm"
-            "btn btn-outline-primary text-primary bg-dark btn-sm px-3"
+          ? "btn btn-outline-primary text-primary bg-dark btn-sm px-3"
           : "btn btn-outline-danger text-danger bg-dark btn-sm",
     });
   };

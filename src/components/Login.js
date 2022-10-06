@@ -3,11 +3,12 @@ import { Fragment, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useDispatch } from "react-redux/";
-import verifyActions from "../redux/actions/verifyActions";
 import Loading from "./Loading/Loading";
-import useVerifyUser from "../Hooks/useVerifyUser";
 import { searchPassword } from "../redux/actions/searchBarActions";
-// import { useEffect } from "react";
+import { axiosPrivateBody } from "../Utils/api/axios";
+import { loginTokenAction } from "../redux/actions/refreshTokenActions";
+import usePublicRoutes from "../Hooks/usePublicRoutes";
+import verifyActions from "../redux/actions/verifyActions";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -16,49 +17,69 @@ const Login = () => {
   const [loginUser, setLoginUser] = useState({
     email: "",
     password: "",
+    loginForever: false,
   });
 
-  const { email, password } = loginUser;
+  const { email, password, loginForever } = loginUser;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setLoginUser({ ...loginUser, [name]: value });
   };
 
+  const toggleKeepMeLogged = (e) => {
+    const { name, checked } = e.target;
+
+    setLoginUser({ ...loginUser, [name]: checked });
+  };
+
   const submitLogin = async (e) => {
     e.preventDefault();
+    try {
+      const data = await axiosPrivateBody(
+        "post",
+        "/auth/login",
+        JSON.stringify(loginUser)
+      );
+      console.log("data INSIDE Login component: ", data);
 
-    const response = await fetch("http://localhost:3003/auth/login", {
-      // const response = await fetch(
-      //   "https://password-manager.fly.dev/auth/login",
-      //   {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        accept: "application/json",
-        "content-type": "application/json;charset=UTF-8",
-      },
-      body: JSON.stringify(loginUser),
-    });
-    const data = await response.json();
-    switch (data) {
-      case "Invalid Email":
-        return alert("Invalid e-mail");
-      case "Email/password combinations is wrong":
-        return alert("Wrong e-mail/password combination");
-      case "Missing Credentials":
-        return alert("Fields can't be empty");
-      case "Login SERVER SIDE Error!":
-        return alert("Login error, please try again later");
-      default:
-        localStorage.setItem("token", data.token);
+      const accessToken = data?.accessToken;
+      console.log("accessToken LOGIN: ", accessToken);
+
+      if (accessToken) {
         navigate("/manager");
         dispatch(searchPassword(""));
+        dispatch(loginTokenAction(accessToken));
         return dispatch(verifyActions());
+      }
+      switch (data) {
+        case "Invalid Email":
+          return alert("Invalid e-mail");
+        case "Email/password combinations is wrong":
+          return alert("Wrong e-mail/password combination");
+        case "Missing Credentials":
+          return alert("Fields can't be empty");
+        case "Login SERVER SIDE Error!":
+          return alert("Login error, please try again later");
+        case "Detected used refresh token in user's cookies":
+          alert(
+            "Someone has made requests without your permission. \nIf that wasn't you please login again and reset your password!"
+          );
+          return setLoginUser({
+            email: "",
+            password: "",
+            loginForever: false,
+          });
+        default:
+          return alert("Unexpected error happened, please try again");
+      }
+    } catch (err) {
+      console.log("Error inside Login component: ", err);
+      alert("Unexpected error happened, please try again.");
     }
   };
 
-  const [isAuthenticatedOrLoading] = useVerifyUser();
+  const [isAuthenticatedOrLoading] = usePublicRoutes();
 
   return (
     <Fragment>
@@ -72,7 +93,7 @@ const Login = () => {
           <form>
             <div className="row">
               <div className="col">
-                <label htmlFor="email" className="text-light">
+                <label htmlFor="email" className="text-white">
                   Enter your e-mail:
                 </label>
                 <input
@@ -84,7 +105,7 @@ const Login = () => {
                   id="email"
                   className="form-control mb-3"
                 />
-                <label htmlFor="password" className="text-light ">
+                <label htmlFor="password" className="text-white ">
                   Enter your password:
                 </label>
                 <input
@@ -97,6 +118,19 @@ const Login = () => {
                   className="form-control mb-4"
                   required
                 />
+                <input
+                  type="checkbox"
+                  id="keepMeLogged"
+                  onChange={toggleKeepMeLogged}
+                  name="loginForever"
+                  checked={loginForever}
+                />
+                <label
+                  htmlFor="keepMeLogged"
+                  className="text-danger ml-1 font-weight-bold"
+                >
+                  Keep me logged until I logout
+                </label>
                 <button
                   className="btn btn-success btn-block mb-4"
                   onClick={(e) => submitLogin(e)}
