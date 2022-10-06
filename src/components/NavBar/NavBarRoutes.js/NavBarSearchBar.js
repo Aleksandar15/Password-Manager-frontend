@@ -1,16 +1,13 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { searchPassword } from "../../../redux/actions/searchBarActions";
-import { logoutUserAction } from "../../../redux/actions/verifyActions";
 import PasswordGenerator from "../../PasswordGenerator/PasswordGenerator";
 
-// import verifyActions from "../../../redux/actions/verifyActions";
+import useLogouts from "../../../Hooks/logout/useLogouts";
 
 function NavBarSearchBar() {
   const location = useLocation();
-
-  const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
@@ -31,13 +28,8 @@ function NavBarSearchBar() {
   const userInfo = useSelector((state) => state.userInfoReducer);
 
   const { user_name: name, user_email: email } = userInfo;
-  const logout = () => {
-    localStorage.removeItem("token");
-    dispatch(logoutUserAction());
-    // dispatch(verifyActions()); ///This is STUCK at 'Loading' -> Hence why my useVerify HOOK && I Think its a mIstake that I dont get API for LOGOUT && That API Cant DO NOTHING, it cant REMOVE TOKENs && then RETURN DATA && WHEN I MAKE SURE localStorage to be REMOVED IT MEASN I GOT logged OUT SUCCESSFULY NO?-I think YES.
-    navigate("/");
-    return dispatch(searchPassword(""));
-  };
+
+  const { logout, logoutAllSessions } = useLogouts();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -65,7 +57,6 @@ function NavBarSearchBar() {
                 placeholder="Search passwords"
                 aria-label="Search passwords"
                 onChange={handleSearchChange}
-                // onChange={(e) => handleSearchChange(e)} //NOPE nothing fixes the allowance to click enter
                 value={searchField}
               />
               <div className="input-group-append">
@@ -111,12 +102,26 @@ function NavBarSearchBar() {
             <PasswordGenerator />
             <br />
             <button
-              onClick={() => logout()}
+              onClick={logout}
               className="btn bg-danger px-4 btn-sm py-2 text-light mt-2 mb-1"
               style={{ borderRadius: "11px", fontWeight: "bold" }}
               type="button"
             >
               LOGOUT
+            </button>
+            <br />
+            <button
+              onClick={logoutAllSessions}
+              className="btn bg-danger my-2 py-2 text-light"
+              style={{
+                borderRadius: "9px",
+                fontSize: "9px",
+                paddingLeft: "6px",
+                paddingRight: "6px",
+              }}
+              type="button"
+            >
+              LOGOUT ALL DEVICES
             </button>
           </div>
         </React.Fragment>

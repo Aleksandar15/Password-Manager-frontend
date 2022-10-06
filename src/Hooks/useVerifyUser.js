@@ -21,6 +21,7 @@ function useVerifyUser() {
       case "Authorization error":
       case "LOGOUT_USER":
       case "Failed to fetch":
+      case "Session expired":
       case false:
         setIsAuthenticatedOrLoading(true);
         break;
