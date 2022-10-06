@@ -7,7 +7,7 @@ import verifyActions from "../redux/actions/verifyActions";
 import Loading from "./Loading/Loading";
 import useVerifyUser from "../Hooks/useVerifyUser";
 import { searchPassword } from "../redux/actions/searchBarActions";
-// import { useEffect } from "react";
+import { useEffect } from "react";
 
 const Login = () => {
   const dispatch = useDispatch();
