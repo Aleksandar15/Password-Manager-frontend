@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { Fragment } from "react";
 import Loading from "./Loading/Loading";
-import usePublicRoutes from "../Hooks/usePublicRoutes";
+import useVerifyUser from "../Hooks/useVerifyUser";
 
 const HomePage = () => {
-  const [isAuthenticatedOrLoading] = usePublicRoutes();
+  const [isAuthenticatedOrLoading] = useVerifyUser();
 
   return (
     <Fragment>
