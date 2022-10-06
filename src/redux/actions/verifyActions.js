@@ -1,16 +1,15 @@
-import axios, { axiosCredentials } from "../../Utils/api/axios";
 import actionTypes from "../action-types/actionTypes";
+
+import api from "../api/rootApi";
 
 const verifyActions = () => async (dispatch) => {
   try {
-    const { data } = await axiosCredentials.get("/auth/is-user-verified");
-
-    console.log("~~~ {data} INSIDE verifyActions: ", data);
+    const data = await api.isUserAuthorized();
 
     dispatch({ type: actionTypes.IS_USER_AUTHORIZED, payload: data });
   } catch (err) {
-    console.log("verifyActions error: ", err.response.data);
-    dispatch({ type: actionTypes.FAILED_TO_FETCH, payload: err.response.data });
+    console.log("verifyActions error: ", err.message);
+    dispatch({ type: actionTypes.FAILED_TO_FETCH, payload: err.message });
   }
 };
 
@@ -18,32 +17,9 @@ export default verifyActions;
 
 export const logoutUserAction = () => async (dispatch) => {
   try {
-    const { data } = await axios.delete("/auth/logout", {
-      withCredentials: true,
-    });
-    console.log("~~~ {data} INSIDE logoutUserAction: ", data);
-    dispatch({ type: actionTypes.LOGOUT_USER, payload: data });
+    dispatch({ type: actionTypes.LOGOUT_USER, payload: "LOGOUT_USER" });
   } catch (err) {
-    console.log("logoutUserAction error: ", err);
-    dispatch({
-      type: actionTypes.LOGOUT_USER_ERROR,
-      payload: err.response.data,
-    });
-  }
-};
-
-export const logoutUserAllSessionsAction = () => async (dispatch) => {
-  try {
-    const { data } = await axios.delete("/auth/logoutallsessions", {
-      withCredentials: true,
-    });
-    console.log("~~~ {data} INSIDE logoutUserAllSessionsAction: ", data);
-    dispatch({ type: actionTypes.LOGOUT_USER_ALL_SESSIONS, payload: data });
-  } catch (err) {
-    console.log("logoutUserAllSessionsAction error: ", err);
-    dispatch({
-      type: actionTypes.LOGOUT_USER_ALL_SESSIONS_ERROR,
-      payload: err.response.data,
-    });
+    console.log("logoutUser error: ", err);
+    dispatch({ type: actionTypes.LOGOUT_USER, payload: err.message });
   }
 };
