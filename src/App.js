@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import React from "react";
 import NavBar from "./components/NavBar/NavBar";
 import PageNotFound from "./components/PageNotFound/PageNotFound";
+import PersistLogin from "./components/PersistLogin/PersistLogin";
 
 const App = () => {
   const FallbackManager = lazy(() => import("./components/manager/Manager"));
@@ -18,6 +19,7 @@ const App = () => {
       <Router>
         <NavBar />
         <div className="container">
+          {/* Public routes */}
           <Routes>
             <Route
               path="/"
@@ -50,16 +52,24 @@ const App = () => {
                 </Suspense>
               }
             />
-            <Route
-              path="/manager"
-              element={
-                <Suspense
-                  fallback={<h3 style={{ textAlign: "center" }}>Loading...</h3>}
-                >
-                  <FallbackManager />
-                </Suspense>
-              }
-            />
+
+            {/* Protected routes */}
+            <Route element={<PersistLogin />}>
+              <Route
+                path="/manager"
+                element={
+                  <Suspense
+                    fallback={
+                      <h3 style={{ textAlign: "center" }}>Loading...</h3>
+                    }
+                  >
+                    <FallbackManager />
+                  </Suspense>
+                }
+              />
+            </Route>
+
+            {/* Not found route */}
             <Route element={<PageNotFound />} path="*" />
           </Routes>
         </div>

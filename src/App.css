@@ -83,6 +83,10 @@ td {
   -ms-user-select: none; /* IE10+ * */
 }
 
+.keepMeLogged label{
+/* margin: 0; */
+}
+
 
 @media 
 only screen and (max-width: 760px),
