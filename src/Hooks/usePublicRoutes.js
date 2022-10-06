@@ -23,6 +23,7 @@ const usePublicRoutes = () => {
           case "Expired refreshToken":
           case "Missing cookies":
           case "User has removed cookies":
+          case "Is user hacked? - publicRoutesAuth":
           case "Successful logout":
           case "User not found by that refreshToken - logout":
           case "Missing cookies - logout":

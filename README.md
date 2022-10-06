@@ -12,7 +12,7 @@
 - Run `npm start` in your command line.
 - Visit http://localhost:3000 in your browser!
 
-### HOW TO's
+### HOW TO's 
 
 ###### How to clone the project?
 
