@@ -2,7 +2,7 @@ import { combineReducers } from "redux";
 
 import verifyReducer from "./appReducers/verifyReducer";
 
-import { searchBarReducer } from "./appReducers/searchBarReducer";
+import { searchBarReducer } from "./searchBarReducer/searchBarReducer";
 
 import { userInfoReducer } from "./userInfoReducer/userInfoReducer";
 import { refreshTokenReducer } from "./authReducers/refreshTokenReducer";

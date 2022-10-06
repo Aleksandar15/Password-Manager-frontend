@@ -20,23 +20,16 @@ export const refreshAction = () => async (dispatch) => {
 };
 
 export const loginTokenAction = (accessToken) => async (dispatch) => {
-  try {
-    console.log(
-      "accessToken INSIDE refreshTokenActions of loginTokenAction: ",
-      accessToken
-    );
-    dispatch({ type: actionType.LOGIN_ACCESS_TOKEN, payload: accessToken });
-  } catch (err) {
-    console.log("Error of loginActionToken INSIDE refreshTokenActions: ", err);
-  }
+  console.log(
+    "accessToken INSIDE refreshTokenActions of loginTokenAction: ",
+    accessToken
+  );
+  dispatch({ type: actionType.LOGIN_ACCESS_TOKEN, payload: accessToken });
 };
 
 export const refreshHOOKAction = (accessToken) => async (dispatch) => {
-  try {
-    console.log("accessToken INSIDE refreshTokenActions: ", accessToken);
-    dispatch({ type: actionType.HOOK_ACCESS_TOKEN, payload: accessToken });
-  } catch (err) {
-    const data = err.response;
-    console.log("Error DATA inside rfershTokenAction: ", data);
-  }
+  dispatch({
+    type: actionType.REFRESH_HOOK_ACCESS_TOKEN,
+    payload: accessToken,
+  });
 };

@@ -7,10 +7,13 @@ const verifyActions = () => async (dispatch) => {
 
     console.log("~~~ {data} INSIDE verifyActions: ", data);
 
-    dispatch({ type: actionTypes.IS_USER_AUTHORIZED, payload: data });
+    dispatch({ type: actionTypes.USER_IS_AUTHORIZED, payload: data });
   } catch (err) {
     console.log("verifyActions error: ", err.response.data);
-    dispatch({ type: actionTypes.FAILED_TO_FETCH, payload: err.response.data });
+    dispatch({
+      type: actionTypes.USER_IS_NOT_AUTHORIZED,
+      payload: err.response.data,
+    });
   }
 };
 

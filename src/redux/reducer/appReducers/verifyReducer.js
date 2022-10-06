@@ -5,12 +5,12 @@ const initialState = {
 };
 const verifyReducer = (state = initialState, action) => {
   switch (action.type) {
-    case allActionTypes.IS_USER_AUTHORIZED:
+    case allActionTypes.USER_IS_AUTHORIZED:
       return {
         ...state,
         isUserAuthorized: action.payload,
       };
-    case allActionTypes.FAILED_TO_FETCH:
+    case allActionTypes.USER_IS_NOT_AUTHORIZED:
       return {
         ...state,
         isUserAuthorized: action.payload,
