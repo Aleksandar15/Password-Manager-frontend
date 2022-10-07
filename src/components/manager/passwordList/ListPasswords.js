@@ -35,7 +35,6 @@ const ListPasswords = ({ allPasswords, setPasswordChanges }) => {
           break;
       }
     } catch (err) {
-      console.error("Error deleting PASSWORD: ", err.response.data);
       const { data: JSONmessage } = err.response;
       switch (JSONmessage) {
         case "Session expired":
