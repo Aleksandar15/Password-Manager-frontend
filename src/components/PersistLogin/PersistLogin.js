@@ -24,11 +24,6 @@ const PersistLogin = () => {
     return () => (isMounted = false);
   }, [data?.accessToken, refresh]);
 
-  useEffect(() => {
-    console.log(`isLoading INSIDE PersistLogin: ${isLoading},
-    accessToken: ${JSON.stringify(data?.accessToken)}`);
-  }, [isLoading, data?.accessToken]);
-
   return <>{isLoading ? <Loading /> : <Outlet />}</>;
 };
 
