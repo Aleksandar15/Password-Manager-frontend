@@ -17,7 +17,6 @@ const ListPasswords = ({ allPasswords, setPasswordChanges }) => {
   const deletePassword = async (id) => {
     try {
       const { data } = await axiosPrivate.delete(`/passwords/${id}`);
-      console.log("~~~~~~~DATA inside ListPasswords AKA DELETE: ", data);
       switch (data) {
         case "Password was deleted!":
           setPasswords(
@@ -38,7 +37,6 @@ const ListPasswords = ({ allPasswords, setPasswordChanges }) => {
     } catch (err) {
       console.error("Error deleting PASSWORD: ", err.response.data);
       const { data: JSONmessage } = err.response;
-      console.log("~+~+~+~+~+~+~JSONmessage ListPasswords: ", JSONmessage);
       switch (JSONmessage) {
         case "Session expired":
           alert("Your session has expired. Please login again.");

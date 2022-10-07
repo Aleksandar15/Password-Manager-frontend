@@ -41,10 +41,8 @@ const Login = () => {
         "/auth/login",
         JSON.stringify(loginUser)
       );
-      console.log("data INSIDE Login component: ", data);
 
       const accessToken = data?.accessToken;
-      console.log("accessToken LOGIN: ", accessToken);
 
       if (accessToken) {
         navigate("/manager");
@@ -74,7 +72,6 @@ const Login = () => {
           return alert("Unexpected error happened, please try again");
       }
     } catch (err) {
-      console.log("Error inside Login component: ", err);
       alert("Unexpected error happened, please try again.");
     }
   };

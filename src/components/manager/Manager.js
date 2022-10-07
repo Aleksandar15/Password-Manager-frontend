@@ -31,9 +31,7 @@ const Manager = () => {
         const { user_name, user_email } = data[0];
         dispatch(showNameEmailAction({ user_name, user_email }));
       } catch (err) {
-        console.log("err INSIDE Manager: ", err);
         const { data: JSONmessage } = err?.response;
-        console.log("JSONmessage INSIDE Manager: ", JSONmessage);
 
         switch (JSONmessage) {
           case "Error Authorizing":

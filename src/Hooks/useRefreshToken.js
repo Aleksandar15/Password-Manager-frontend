@@ -6,18 +6,13 @@ const useRefreshToken = () => {
   const dispatch = useDispatch();
 
   const refresh = async () => {
-    try {
-      const { data } = await axios.get(`/auth/refresh`, {
-        withCredentials: true,
-      });
-      console.log("~_~_~~_~data INSIDE useRefreshToken: ", data);
+    const { data } = await axios.get(`/auth/refresh`, {
+      withCredentials: true,
+    });
 
-      dispatch(refreshHOOKAction(data.accessToken));
+    dispatch(refreshHOOKAction(data.accessToken));
 
-      return data?.accessToken;
-    } catch (err) {
-      console.log("useRefreshToken error: ", err);
-    }
+    return data?.accessToken;
   };
 
   return refresh;

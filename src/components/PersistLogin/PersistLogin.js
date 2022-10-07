@@ -10,17 +10,22 @@ const PersistLogin = () => {
   const data = useSelector((state) => state.refreshTokenReducer);
 
   useEffect(() => {
+    let isMounted = true;
     const verifyRefreshToken = async () => {
       try {
         await refresh();
-      } catch (err) {
-        console.log("Error INSIDE PersistLogin: ", err);
+        // catch (err) {
+        //   console.log("Error INSIDE PersistLogin: ", err);
+        // }
       } finally {
-        setIsLoading(false);
+        // setIsLoading(false);
+        isMounted && setIsLoading(false);
       }
     };
 
     !data?.accessToken ? verifyRefreshToken() : setIsLoading(false);
+
+    return () => (isMounted = false);
   }, [data?.accessToken, refresh]);
 
   useEffect(() => {
