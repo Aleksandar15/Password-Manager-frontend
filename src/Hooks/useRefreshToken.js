@@ -6,15 +6,19 @@ const useRefreshToken = () => {
   const dispatch = useDispatch();
 
   const refresh = async () => {
-    const { data } = await axios.get(`/auth/refresh`, {
-      withCredentials: true,
-    });
+    try {
+      const { data } = await axios.get(`/auth/refresh`, {
+        withCredentials: true,
+      });
 
-    dispatch(refreshHOOKAction(data.accessToken));
+      dispatch(refreshHOOKAction(data.accessToken));
 
-    return data?.accessToken;
+      return data?.accessToken;
+    } catch (err) {
+      ///refresh Error is not handled in here with the current setup
+      //I might have to modify my codebase in the future
+    }
   };
-
   return refresh;
 };
 
