@@ -30,13 +30,10 @@ const Register = () => {
         }
       );
 
-      console.log("data INSIDE Register component: ", data);
-
       alert(`${data} You can login now.`);
       return navigate("/login");
     } catch (err) {
       const { data: JSONmessage } = err.response;
-      console.log("JSONmessage INSIDE Login: ", JSONmessage);
 
       switch (JSONmessage) {
         case "User by that E-MAIL already exist in our database!":
