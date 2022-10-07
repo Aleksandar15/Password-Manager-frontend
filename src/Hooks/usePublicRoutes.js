@@ -12,6 +12,8 @@ const usePublicRoutes = () => {
   const { isUserAuthorized } = useSelector((state) => state.verifyReducer);
   const dispatch = useDispatch();
 
+  console.log("isUserAuthorized usePublicRoutes: ", isUserAuthorized);
+
   useEffect(() => {
     switch (isUserAuthorized) {
       case "User is authorized":

@@ -32,7 +32,6 @@ const Manager = () => {
         dispatch(showNameEmailAction({ user_name, user_email }));
       } catch (err) {
         const { data: JSONmessage } = err?.response;
-
         switch (JSONmessage) {
           case "Error Authorizing":
           case "User has removed cookies":

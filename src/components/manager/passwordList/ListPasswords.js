@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../../Hooks/useAxiosPrivate";
 import { searchPassword } from "../../../redux/actions/searchBarActions";
+import { userAuthEnded } from "../../../redux/actions/verifyActions";
 
 import EditPassword from "./EditPassword";
 
@@ -36,6 +37,7 @@ const ListPasswords = ({ allPasswords, setPasswordChanges }) => {
       }
     } catch (err) {
       const { data: JSONmessage } = err.response;
+      dispatch(userAuthEnded(JSONmessage));
       switch (JSONmessage) {
         case "Session expired":
           alert("Your session has expired. Please login again.");

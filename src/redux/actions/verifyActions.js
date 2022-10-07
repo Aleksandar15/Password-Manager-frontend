@@ -43,3 +43,7 @@ export const logoutUserAllSessionsAction = () => async (dispatch) => {
     });
   }
 };
+
+export const userAuthEnded = (authExpiredMessage) => async (dispatch) => {
+  dispatch({ type: actionTypes.USER_AUTH_ENDED, payload: authExpiredMessage });
+};

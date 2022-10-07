@@ -35,6 +35,11 @@ const verifyReducer = (state = initialState, action) => {
         ...state,
         isUserAuthorized: action.payload,
       };
+    case allActionTypes.USER_AUTH_ENDED:
+      return {
+        ...state,
+        isUserAuthorized: action.payload,
+      };
     default:
       return state;
   }

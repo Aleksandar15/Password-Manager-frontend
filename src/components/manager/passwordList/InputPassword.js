@@ -5,6 +5,9 @@ import { searchPassword } from "../../../redux/actions/searchBarActions";
 
 import { Button, Modal } from "react-bootstrap";
 import useAxiosPrivate from "../../../Hooks/useAxiosPrivate";
+import verifyActions, {
+  userAuthEnded,
+} from "../../../redux/actions/verifyActions";
 
 const InputPassword = ({ setPasswordChanges }) => {
   const [passwordInfo, setPasswordInfo] = useState({
@@ -42,7 +45,7 @@ const InputPassword = ({ setPasswordChanges }) => {
       }
     } catch (err) {
       const { data: JSONmessage } = err?.response;
-
+      dispatch(userAuthEnded(JSONmessage));
       switch (JSONmessage) {
         case "Error Authorizing":
           alert("You are not authorized to view this page. Please login.");
