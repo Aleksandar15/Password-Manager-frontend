@@ -30,10 +30,9 @@ const InputPassword = ({ setPasswordChanges }) => {
         setShow(true);
         return alert("Fields can't be empty");
       } else {
-        // const { data } = await axiosPrivate.post("/passwords", passwordInfo);
-        await axiosPrivate.post("/passwords", passwordInfo);
+        const { data } = await axiosPrivate.post("/passwords", passwordInfo);
 
-        setPasswordChanges(true);
+        data === "ADDED to the password vault" && setPasswordChanges(true);
         setPasswordInfo({
           website: "",
           email: "",
