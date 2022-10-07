@@ -14,11 +14,7 @@ const PersistLogin = () => {
     const verifyRefreshToken = async () => {
       try {
         await refresh();
-        // catch (err) {
-        //   console.log("Error INSIDE PersistLogin: ", err);
-        // }
       } finally {
-        // setIsLoading(false);
         isMounted && setIsLoading(false);
       }
     };
