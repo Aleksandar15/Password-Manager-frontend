@@ -8,6 +8,7 @@ import { Button, Modal } from "react-bootstrap";
 import copyText from "../../../Utils/copyText";
 import { useEffect } from "react";
 import { axiosPrivate } from "../../../Utils/api/axios";
+import { userAuthEnded } from "../../../redux/actions/verifyActions";
 
 const EditPassword = ({ password, setPasswordChanges }) => {
   const [passwordInfo, setPasswordInfo] = useState({
@@ -53,7 +54,7 @@ const EditPassword = ({ password, setPasswordChanges }) => {
       setPasswordChanges(true);
     } catch (err) {
       const { data: JSONmessage } = err.response;
-
+      dispatch(userAuthEnded(JSONmessage));
       switch (JSONmessage) {
         case "Session expired":
           alert("Your session has expired. Please login again.");
@@ -118,7 +119,7 @@ const EditPassword = ({ password, setPasswordChanges }) => {
       }
     } catch (err) {
       const { data: JSONmessage } = err.response;
-
+      dispatch(userAuthEnded(JSONmessage));
       switch (JSONmessage) {
         case "Error Authorizing":
         case "Session expired":
