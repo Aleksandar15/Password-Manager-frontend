@@ -13,35 +13,29 @@ const usePublicRoutes = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    (async () => {
-      try {
-        switch (isUserAuthorized) {
-          case "User is authorized":
-            setIsAuthenticatedOrLoading(false);
-            navigate("/manager");
-            break;
-          case "Expired refreshToken":
-          case "Missing cookies":
-          case "User has removed cookies":
-          case "Is user hacked? - publicRoutesAuth":
-          case "Successful logout":
-          case "User not found by that refreshToken - logout":
-          case "Missing cookies - logout":
-            setIsAuthenticatedOrLoading(true);
-            break;
-          case "Loading":
-            setIsAuthenticatedOrLoading(false);
-            dispatch(verifyActions());
-            break;
-          default:
-            setIsAuthenticatedOrLoading(true);
-            alert("Unexpected error happened, please refresh.");
-            break;
-        }
-      } catch (err) {
-        console.log("error INSIDE usePublicRoutes: ", err);
-      }
-    })();
+    switch (isUserAuthorized) {
+      case "User is authorized":
+        setIsAuthenticatedOrLoading(false);
+        navigate("/manager");
+        break;
+      case "Expired refreshToken":
+      case "Missing cookies":
+      case "User has removed cookies":
+      case "Is user hacked? - publicRoutesAuth":
+      case "Successful logout":
+      case "User not found by that refreshToken - logout":
+      case "Missing cookies - logout":
+        setIsAuthenticatedOrLoading(true);
+        break;
+      case "Loading":
+        setIsAuthenticatedOrLoading(false);
+        dispatch(verifyActions());
+        break;
+      default:
+        setIsAuthenticatedOrLoading(true);
+        alert("Unexpected error happened, please refresh.");
+        break;
+    }
   }, [navigate, isUserAuthorized, dispatch]);
 
   return [isAuthenticatedOrLoading];

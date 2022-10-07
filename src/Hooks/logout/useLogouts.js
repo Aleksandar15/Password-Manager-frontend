@@ -13,7 +13,6 @@ const useLogouts = () => {
   const navigate = useNavigate();
 
   const { isUserAuthorized } = useSelector((state) => state.verifyReducer);
-  console.log("isUserAuthorized INSIDE useLogouts HOOK: ", isUserAuthorized);
   const logoutAllSessions = async () => {
     dispatch(searchPassword(""));
     dispatch(logoutUserAllSessionsAction());

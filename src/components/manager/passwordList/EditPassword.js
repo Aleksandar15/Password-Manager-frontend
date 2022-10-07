@@ -34,11 +34,6 @@ const EditPassword = ({ password, setPasswordChanges }) => {
         `/manager/decryptpassword/${id}`
       );
 
-      console.log(
-        "decryptPassword INSIDE EditPassword.js: ",
-        decryptedPassword
-      );
-
       if (decryptedPassword === "This DATA doesn't belong to you") {
         alert("This password has been removed");
         setShow(false);
@@ -58,7 +53,6 @@ const EditPassword = ({ password, setPasswordChanges }) => {
       setPasswordChanges(true);
     } catch (err) {
       const { data: JSONmessage } = err.response;
-      console.log("JSONmessage INSIDE EditPassword: ", JSONmessage);
 
       switch (JSONmessage) {
         case "Session expired":
@@ -110,14 +104,11 @@ const EditPassword = ({ password, setPasswordChanges }) => {
       ) {
         alert("Fields can't be empty");
       } else {
-        console.log("passwordInfo: ", passwordInfo);
-
         const { data } = await axiosPrivate.put(
           `/passwords/${password.password_id}`,
           passwordInfo
         );
 
-        console.log("data updatePasswordInfo INSIDE EditPassword.js: ", data);
         if (data === "This DATA doesn't belong to you") {
           alert("This password has been removed");
           return setPasswordChanges(true);
@@ -126,12 +117,7 @@ const EditPassword = ({ password, setPasswordChanges }) => {
         setShow(false);
       }
     } catch (err) {
-      console.log(
-        "Error updatePasswordInfo inside EditPassword component: ",
-        err
-      );
       const { data: JSONmessage } = err.response;
-      console.log("JSONmessage INSIDE Login: ", JSONmessage);
 
       switch (JSONmessage) {
         case "Error Authorizing":

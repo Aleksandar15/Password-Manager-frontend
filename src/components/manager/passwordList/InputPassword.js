@@ -30,9 +30,9 @@ const InputPassword = ({ setPasswordChanges }) => {
         setShow(true);
         return alert("Fields can't be empty");
       } else {
-        const { data } = await axiosPrivate.post("/passwords", passwordInfo);
+        // const { data } = await axiosPrivate.post("/passwords", passwordInfo);
+        await axiosPrivate.post("/passwords", passwordInfo);
 
-        console.log("data ~~~~~~~ INSIDE InputPassword: ", data);
         setPasswordChanges(true);
         setPasswordInfo({
           website: "",
@@ -43,7 +43,6 @@ const InputPassword = ({ setPasswordChanges }) => {
       }
     } catch (err) {
       const { data: JSONmessage } = err?.response;
-      console.log("JSONmessage error INSIDE InputPassword: ", JSONmessage);
 
       switch (JSONmessage) {
         case "Error Authorizing":
