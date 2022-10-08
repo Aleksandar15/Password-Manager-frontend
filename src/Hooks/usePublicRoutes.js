@@ -32,7 +32,8 @@ const usePublicRoutes = () => {
         dispatch(verifyActions());
         break;
       default:
-        setIsAuthenticatedOrLoading(true);
+        setIsAuthenticatedOrLoading(false);
+        dispatch(verifyActions());
         alert("Unexpected error happened, please refresh.");
         break;
     }
