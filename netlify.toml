@@ -1,4 +1,4 @@
 [[redirects]]
 from = '/*'
-to = '/index.html'
+to = 'https://password-manager.fly.dev'
 status = 200
