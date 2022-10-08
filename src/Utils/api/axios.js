@@ -1,7 +1,8 @@
 import axios from "axios";
 // const BASE_URL = "http://localhost:3003";
 // const BASE_URL = "https://password-manager.fly.dev";
-const BASE_URL = "https://alek-password-manager.netlify.app";
+// const BASE_URL = "https://alek-password-manager.netlify.app";
+const BASE_URL = "https://alek-password-manager.netlify.app/api";
 
 export default axios.create({ baseURL: BASE_URL });
 
