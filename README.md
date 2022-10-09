@@ -14,7 +14,7 @@
 
 # NOTES
 
-**1.** In order for authentication cookies to work, the current <a href="https://github.com/Aleksandar15/password-manager-server">server</a> setup has `secure: true` property in its cookie creation so you might need to start local development with `HTTPS protocol` by modifying parts of package.json:
+**1.** In order for authentication cookies to work, the current <a href="https://github.com/Aleksandar15/password-manager-server">server</a> setup has `secure: true` property in its cookie creation so you might need to start local development with `HTTPS` _protocol_ by modifying parts of package.json:
 
 #### For Windows OS:
 
