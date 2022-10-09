@@ -12,7 +12,19 @@
 - Run `npm start` in your command line.
 - Visit http://localhost:3000 in your browser!
 
-### HOW TO's 
+# NOTE
+
+In order for authentication cookies to work the current <a href="https://github.com/Aleksandar15/password-manager-server">server</a> setup has `secure: true` property in its cookie creation so you might need to start local development with `HTTPS protocol` by modifying package.json into:
+
+#### For Windows OS:
+
+`"scripts": {"start": "set HTTPS=true&&react-scripts start"}` or just start the app with `set HTTPS=true&&npm start` command.
+
+#### For MacOS:
+
+`"scripts": {"start": "HTTPS=true react-scripts start"` or just start the app with `HTTPS=true npm start` command.
+
+### HOW TO's
 
 ###### How to clone the project?
 
@@ -22,4 +34,4 @@
 
 ###### How to connect to the server?
 
-##### Clone the server code: https://github.com/Aleksandar15/password-manager-server
+##### Clone the server code: <a href="https://github.com/Aleksandar15/password-manager-server">here</a> & follow the instructions there.
