@@ -14,7 +14,7 @@ import useShowHideButton from "../Hooks/showHideInput/useShowHideInput";
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log("process.env.NODE_ENV inside login: ", process.env.NODE_ENV); //
+  console.log("process.env.NODE_ENV inside login: ", process.env.NODE_ENV);
 
   const [loginUser, setLoginUser] = useState({
     email: "",
