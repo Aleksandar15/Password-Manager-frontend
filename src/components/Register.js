@@ -1,6 +1,7 @@
 import { Fragment, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
+import useShowHideButton from "../Hooks/showHideInput/useShowHideInput";
 import usePublicRoutes from "../Hooks/usePublicRoutes";
 import axios from "../Utils/api/axios";
 import Loading from "./Loading/Loading";
@@ -54,6 +55,7 @@ const Register = () => {
   };
 
   const [isAuthenticatedOrLoading] = usePublicRoutes();
+  const { showHideButton, showHideButtonSwitch } = useShowHideButton();
 
   return (
     <Fragment>
@@ -95,15 +97,29 @@ const Register = () => {
                   <label htmlFor="password" className="text-light">
                     Enter your password:
                   </label>
-                  <input
-                    value={password}
-                    onChange={handleInputChange}
-                    name="password"
-                    placeholder="password"
-                    type="password"
-                    id="password"
-                    className="form-control mb-4"
-                  />
+                  <div className="input-group mb-4">
+                    <input
+                      value={password}
+                      onChange={handleInputChange}
+                      name="password"
+                      placeholder="password"
+                      type={showHideButton.inputType}
+                      id="password"
+                      className="form-control"
+                    />
+                    <div className="input-group-append">
+                      <button
+                        className={showHideButton.className}
+                        type="button"
+                        id="show-hide"
+                        onClick={() => showHideButtonSwitch()}
+                        style={showHideButton.btnStyle}
+                      >
+                        {showHideButton.text}
+                      </button>
+                    </div>
+                  </div>
+
                   <button
                     onClick={(e) => registerUser(e)}
                     className="btn btn-success btn-block mb-4"
