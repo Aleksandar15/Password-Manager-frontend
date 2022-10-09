@@ -14,7 +14,7 @@
 
 # NOTE
 
-In order for authentication cookies to work the current <a href="https://github.com/Aleksandar15/password-manager-server">server</a> setup has `secure: true` property in its cookie creation so you might need to start local development with `HTTPS protocol` by modifying package.json into:
+In order for authentication cookies to work, the current <a href="https://github.com/Aleksandar15/password-manager-server">server</a> setup has `secure: true` property in its cookie creation so you might need to start local development with `HTTPS protocol` by modifying parts of package.json:
 
 #### For Windows OS:
 
@@ -34,4 +34,4 @@ In order for authentication cookies to work the current <a href="https://github.
 
 ###### How to connect to the server?
 
-##### Clone the server code: <a href="https://github.com/Aleksandar15/password-manager-server">here</a> & follow the instructions there.
+##### Clone the server code from <a href="https://github.com/Aleksandar15/password-manager-server">here</a> & follow the instructions there.
