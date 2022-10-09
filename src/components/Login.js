@@ -9,10 +9,12 @@ import { axiosPrivateBody } from "../Utils/api/axios";
 import { loginTokenAction } from "../redux/actions/refreshTokenActions";
 import usePublicRoutes from "../Hooks/usePublicRoutes";
 import verifyActions from "../redux/actions/verifyActions";
+import useShowHideButton from "../Hooks/showHideInput/useShowHideInput";
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  console.log("process.env.NODE_ENV inside login: ", process.env.NODE_ENV);
 
   const [loginUser, setLoginUser] = useState({
     email: "",
@@ -77,6 +79,7 @@ const Login = () => {
   };
 
   const [isAuthenticatedOrLoading] = usePublicRoutes();
+  const { showHideButton, showHideButtonSwitch } = useShowHideButton();
 
   return (
     <Fragment>
@@ -105,16 +108,29 @@ const Login = () => {
                 <label htmlFor="password" className="text-white ">
                   Enter your password:
                 </label>
-                <input
-                  onChange={handleInputChange}
-                  value={password}
-                  name="password"
-                  type="password"
-                  placeholder="password"
-                  id="password"
-                  className="form-control mb-4"
-                  required
-                />
+                <div className="input-group mb-4">
+                  <input
+                    onChange={handleInputChange}
+                    value={password}
+                    name="password"
+                    type={showHideButton.inputType}
+                    placeholder="password"
+                    id="password"
+                    className="form-control"
+                    required
+                  />
+                  <div className="input-group-append">
+                    <button
+                      className={showHideButton.className}
+                      type="button"
+                      id="show-hide"
+                      onClick={() => showHideButtonSwitch()}
+                      style={showHideButton.btnStyle}
+                    >
+                      {showHideButton.text}
+                    </button>
+                  </div>
+                </div>
                 <input
                   type="checkbox"
                   id="keepMeLogged"
