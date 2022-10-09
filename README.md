@@ -12,9 +12,9 @@
 - Run `npm start` in your command line.
 - Visit http://localhost:3000 in your browser!
 
-# NOTE
+# NOTES
 
-In order for authentication cookies to work, the current <a href="https://github.com/Aleksandar15/password-manager-server">server</a> setup has `secure: true` property in its cookie creation so you might need to start local development with `HTTPS protocol` by modifying parts of package.json:
+**1.** In order for authentication cookies to work, the current <a href="https://github.com/Aleksandar15/password-manager-server">server</a> setup has `secure: true` property in its cookie creation so you might need to start local development with `HTTPS protocol` by modifying parts of package.json:
 
 #### For Windows OS:
 
@@ -23,6 +23,8 @@ In order for authentication cookies to work, the current <a href="https://github
 #### For MacOS:
 
 `"scripts": {"start": "HTTPS=true react-scripts start"` or just start the app with `HTTPS=true npm start` command.
+
+**2.** Make sure to modify `BASE_URL` to your server's localhost URL by heading to `axios.js` file directory: `src/Utils/api/axios.js` & also omit the `/api` path as its only suitable for production build with my current Netlify proxy setup.
 
 ### HOW TO's
 
