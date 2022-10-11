@@ -26,10 +26,12 @@ const Manager = () => {
       try {
         const { data } = await axiosPrivate.get("/manager");
 
-        isMounted && setAllPasswords(data);
-        setIsAuthenticatedOrLoading(true);
-        const { user_name, user_email } = data[0];
-        dispatch(showNameEmailAction({ user_name, user_email }));
+        if (isMounted) {
+          setAllPasswords(data);
+          setIsAuthenticatedOrLoading(true);
+          const { user_name, user_email } = data[0];
+          dispatch(showNameEmailAction({ user_name, user_email }));
+        }
       } catch (err) {
         const { data: JSONmessage } = err?.response;
         switch (JSONmessage) {
