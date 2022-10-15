@@ -15,6 +15,7 @@ I created this project with one of the main goal being that to challenge my web 
 - Run `npm install` in your command line.
 - Run `npm start` in your command line.
 - Visit http://localhost:3000 in your browser!
+- _Optional_: you may want to connect it to my <a href="https://github.com/Aleksandar15/password-manager-server">backend</a> project.
 
 # NOTES
 
