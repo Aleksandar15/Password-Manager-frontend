@@ -1,6 +1,6 @@
 # Password Manager V2 using PERN Stack
 
-##### Here is the <a href="https://github.com/Aleksandar15/password-manager-server">server</a> code
+##### -> Here is the <a href="https://github.com/Aleksandar15/password-manager-server">server</a> code
 
 #### About my Full-Stack Password Manager app:
 
