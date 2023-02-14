@@ -15,8 +15,9 @@ const useRefreshToken = () => {
 
       return data?.accessToken;
     } catch (err) {
-      ///refresh Error is not handled in here with the current setup
-      //I might have to modify my codebase in the future
+      // refreshToken's Error is already handled in useAxiosPrivate hook
+      // as for the current setup.
+      // I might modify my codebase in the future (but it's just visual appeal)
     }
   };
   return refresh;
