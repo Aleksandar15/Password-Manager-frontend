@@ -19,6 +19,10 @@ const PersistLogin = () => {
       }
     };
 
+    // Send user to the protected child component `Outlet`
+    // which child has a default state of "Loading" component
+    // & it also handles auth-logic on its own
+    // & decides to either 'redirect' or to show the page.
     !data?.accessToken ? verifyRefreshToken() : setIsLoading(false);
 
     return () => (isMounted = false);
