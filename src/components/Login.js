@@ -77,6 +77,53 @@ const Login = () => {
     }
   };
 
+  const submitTestUser = async (e) => {
+    e.preventDefault();
+    try {
+      const data = await axiosPrivateBody(
+        "post",
+        "/auth/login",
+        JSON.stringify({
+          email: "test@test.com",
+          password: "test",
+          loginForever: false,
+        })
+      );
+
+      const accessToken = data?.accessToken;
+
+      if (accessToken) {
+        navigate("/manager");
+        dispatch(searchPassword(""));
+        dispatch(loginTokenAction(accessToken));
+        return dispatch(verifyActions());
+      }
+      switch (data) {
+        case "Invalid Email":
+          return alert("Invalid e-mail");
+        case "Email/password combinations is wrong":
+          return alert("Wrong e-mail/password combination");
+        case "Missing Credentials":
+          return alert("Fields can't be empty");
+        case "Login SERVER SIDE Error!":
+          return alert("Login error, please try again later");
+        case "Detected used refresh token in user's cookies":
+          alert(
+            "Someone has made requests without your permission. \nIf that wasn't you please login again and reset your password!"
+          );
+          return setLoginUser({
+            email: "",
+            password: "",
+            loginForever: false,
+          });
+        default:
+          return alert("Unexpected error happened, please try again");
+      }
+    } catch (err) {
+      alert("Unexpected error happened, please try again.");
+    }
+  };
+
   const [isAuthenticatedOrLoading] = usePublicRoutes();
   const { showHideButton, showHideButtonSwitch } = useShowHideButton();
 
@@ -130,6 +177,14 @@ const Login = () => {
                     </button>
                   </div>
                 </div>
+
+                <button
+                  className="btn btn-primary btn-block mb-4"
+                  onClick={(e) => submitTestUser(e)}
+                >
+                  LOGIN TEST USER
+                </button>
+
                 <input
                   type="checkbox"
                   id="keepMeLogged"
