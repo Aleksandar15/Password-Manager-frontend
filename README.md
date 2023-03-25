@@ -24,6 +24,7 @@ I created this project with one of the main goal being that to challenge my web 
 
 - I implemented "_refresh tokens_" which are long-lived alongside "_access tokens_" which are short-lived JSON web tokens. However I gave the clients an option to stay signed-in until they manually log out in cases where they fully trust their device & network. The user requires a valid _refresh token_ in order to request a new _access token_ - on success they get both new _accessToken_ & _refreshToken_ - while on invalid or expired _refresh token_ the said token is removed from the database and the user is alerted accordingly and redirected to the login page on the frontend.
 - Anti-hacks security: in case where the user's _refreshToken_ is not inside the database -> it means the _refreshToken_ was used by someone else (I suspect it's a hacker) and I alert the user about the potential threat.
+  - Note: these features are commonly called "*refresh token rotation*" and "*refresh token reuse detection"*.
   - However, in my *multi-device* logic the result of "*missing refreshToken*" could simply mean that a trusted family user - logged on another device - have just used the option "*logout all devices*" so I had to modify the alert to remind my users of such case scenario where they have to communicate it out with them and be assured whether they were hacked or not. (*Read more info below*)
 
 ##### The challenge
