@@ -28,7 +28,8 @@ I created this project with one of the main goal being that to challenge my web 
 
 ##### The challenge
 
-- "_Multi-device_" feature allows the _user A_ logged on _device A_ to "_log out all devices_"(meaning: empties out the array of _refreshToken_'s in the database) which will technically log-out the same _user A_ but logged on _device B_ & my "safety alert-message" about _anti-hacks_ will get triggered, therefore, the message itself has to have empathy about such a case scenario where some of their family members clicked the "_logout all devices_" button on another device as an example. It was kind of like a Catch-22 where I couldn't have a separate message and the solution was a _guided-empathetic-message_ to make sure I'm not misleading my users.
+- "_Multi-device_" feature allows the _user A_ logged on _device A_ to "_log out all devices_" which means: empties out the array of _refreshToken_'s in the database; which will technically log-out the *user A* from both the *device A* and also logout the same _user A_ but logged on _device B_ & my "safety alert-message" about _anti-hacks_ will get triggered, therefore, the message itself had to be modified to include more empathy about such a case scenario where some of their family members may have clicked the "_logout all devices_" button on another device as an example. 
+  - It was kind of like a Catch-22 where I couldn't have a separate message - for both #1 the attempt of the hacker to be re-using the same *refreshToken* that the legit-user already have used & #2 a trusted user has used "*logout all devices" feature -> which in both cases leads to removal of the *refreshToken* from database - and the solution was a _guided-empathetic-message_ to make sure that such a user has asked for more info from his trusted user's actions first, so that I'm not misleading my users with the alert.
 
 ##### My PERN Stack technologies:
 
